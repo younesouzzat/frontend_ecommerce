@@ -1,15 +1,21 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/components/theme-provider";
+import { StoreProvider } from "@/redux/stores/StoreProvider";
+import { AuthProvider } from "@/redux/stores/AuthProvider";
+import { Toaster } from "react-hot-toast";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Load Google Fonts
+const geist = Geist({
   subsets: ["latin"],
+  variable: "--font-geist",
+  display: "swap",
 });
-
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
   subsets: ["latin"],
+  variable: "--font-geist-mono",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -19,15 +25,28 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`font-sans antialiased leading-relaxed ${geist.variable} ${geistMono.variable} bg-gray-50 text-gray-900`}
+        style={{ fontFamily: "'Hennigar D', var(--font-geist), sans-serif" }} // Hennigar D as Primary
       >
-        {children}
+        <StoreProvider>
+          <AuthProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+                {children}
+                <Toaster />
+            </ThemeProvider>
+          </AuthProvider>
+        </StoreProvider>
       </body>
     </html>
   );
