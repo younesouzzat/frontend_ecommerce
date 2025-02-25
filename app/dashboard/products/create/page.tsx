@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { Loader2, ChartColumnStacked } from "lucide-react";
+import { Loader2, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-hot-toast";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -182,7 +182,7 @@ const CreateProductPage = () => {
         <CardHeader className="p-6 border-b">
           <div className="flex items-center space-x-3">
             <div className="p-2 bg-primary/10 rounded-lg">
-              <ChartColumnStacked className="w-5 h-5 text-primary" />
+              <ShoppingCart className="w-5 h-5 text-primary" />
             </div>
             <CardTitle className="text-primary">Create Product</CardTitle>
           </div>

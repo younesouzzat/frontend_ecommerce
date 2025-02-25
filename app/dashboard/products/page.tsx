@@ -4,7 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Product, columns } from "./columns";
 import { DataTable } from "./data-table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PlusCircle, ChartColumnStacked } from "lucide-react";
+import { PlusCircle, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useGetProductsQuery } from "@/redux/services/admin/products";
 import { routes } from "@/utils/routes";
@@ -39,7 +39,7 @@ export default function ProductsPage() {
         <CardHeader className="p-6 flex flex-col space-y-2 md:flex-row md:space-x-2 items-center justify-between">
           <div className="flex flex-row space-x-2 items-center">
             <div className="p-2 bg-primary/10 rounded-lg">
-              <ChartColumnStacked className="w-5 h-5 text-primary" />
+              <ShoppingCart className="w-5 h-5 text-primary" />
             </div>
             <CardTitle className="text-primary">Product Management</CardTitle>
           </div>

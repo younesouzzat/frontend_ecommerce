@@ -101,7 +101,7 @@ export const columns = (refetch: () => void): ColumnDef<Role>[] => [
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>
+                    <AlertDialogTitle className="dark:text-white">
                       {MESSAGES.CONFIRM.TITLE}
                     </AlertDialogTitle>
                     <AlertDialogDescription>
@@ -109,7 +109,7 @@ export const columns = (refetch: () => void): ColumnDef<Role>[] => [
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel>
+                    <AlertDialogCancel className="dark:text-white">
                       {MESSAGES.BUTTONS.CANCEL}
                     </AlertDialogCancel>
                     <AlertDialogAction

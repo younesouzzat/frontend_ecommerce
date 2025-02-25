@@ -50,7 +50,7 @@ export const adminProductsApi = createApi({
       }),
     }),
     updateProduct: builder.mutation({
-      query: (credentials) => (console.log(credentials), {
+      query: (credentials) => ({
         url: `update-product`,
         method: "POST",
         body: credentials,
