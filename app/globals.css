@@ -6,6 +6,45 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.container {
+  max-width: 1140px;
+  margin: 0 auto;
+  /* padding: 0px 60px 0px 60px; */
+}
+
+.secondary-container {
+  margin: 0 auto;
+  padding: 20px 60px 20px 60px;
+}
+
+.tab-button.active::after {
+  content: "";
+  position: absolute;
+  bottom: -15px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  height: 30px;
+  width: 30px;
+  background-color: --primary-background;
+  opacity: 1;
+  z-index: 1;
+  transition: all 0.4s ease;
+}
+
+.second-tab-button.active::after {
+  content: "";
+  position: absolute;
+  bottom: -15px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  height: 5px;
+  width: 5px;
+  background-color: --primary-background;
+  opacity: 1;
+  z-index: 1;
+  transition: all 0.4s ease;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -41,6 +80,10 @@ body {
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    --primary-background: 214 100% 41%;
+    --secondary-background: 84 52% 48%;
+    --topbar-background: 0 0% 96.1%;
   }
   .dark {
     --background: 0 0% 3.9%;
@@ -75,6 +118,10 @@ body {
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    --primary-background: 0 0% 100%;
+    --secondary-background: 84 52% 48%;
+    --topbar-background: 0 0% 3.9%;
   }
 }
 
@@ -97,3 +144,11 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+
+@media (max-width: 768px) {
+  .secondary-container {
+    padding: 8px;
+  }
+}
+

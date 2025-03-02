@@ -67,7 +67,9 @@ export function SignupForm({
             "auth_data",
             JSON.stringify({
               token: response?.user?.token,
-              role: Array.isArray(response?.user?.role) ? response?.user?.role : [response?.user?.role],
+              role: Array.isArray(response?.user?.role)
+                ? response?.user?.role
+                : [response?.user?.role],
               username: response?.user?.name,
               useremail: response?.user?.email,
             }),
@@ -102,7 +104,12 @@ export function SignupForm({
           </div>
         </CardHeader>
         <CardContent className="grid p-0 md:grid-cols-2">
-          <div className="order-1 md:order-0 p-6 md:p-8">
+          <div className="order-1 md:order-0 space-y-4 p-6 md:p-8">
+            <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
+              <span className="relative z-10 bg-background px-2 text-muted-foreground">
+                Or continue with
+              </span>
+            </div>
             <div className="flex flex-col gap-6">
               <div className="grid grid-cols-1 gap-4">
                 <Button variant="outline" className="w-full">

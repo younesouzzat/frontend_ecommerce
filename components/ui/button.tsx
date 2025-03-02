@@ -19,12 +19,24 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        custom: "bg-blue-700 text-white hover:bg-blue-700/90",
+        custom_btnbf: "bg-white border-2 border-[#e8e8e8] hover:bg-blue-700/90 text-black hover:text-white transition-transform duration-300 hover:scale-105",
+        // secondary_btn: "bg-blue-700 hover:bg-secondarybackground dark:hover:bg-secondarybackground text-white",
+        secondary_btn: "bg-blue-700 hover:bg-secondarybackground dark:hover:bg-secondarybackground text-white",
+        arrows_btn: "bg-transparent text-white [&_svg]:size-auto dark:text-black"
       },
       size: {
         default: "h-9 px-4 py-2",
         sm: "h-8 rounded-md px-3 text-xs",
         lg: "h-10 rounded-md px-8",
         icon: "h-9 w-9",
+        large: "h-14 w-full rounded-none",
+        btnsearch: "h-14 w-14 rounded-none",
+        btnbf: "h-14 w-full rounded-md",
+        basketbtn: "size-7",
+        primarybtn: "h-12 p-6 rounded-md",
+        arrowsbtn: "w-12 h-12",
+        custom_sm: "h-12 w-28 p-6 rounded-md"
       },
     },
     defaultVariants: {
