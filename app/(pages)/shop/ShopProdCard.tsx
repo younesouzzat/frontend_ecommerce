@@ -1,12 +1,19 @@
-import React from "react";
+"use client";
 
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  toggleWishlist,
+  toggleCompare,
+  setQuickView,
+  addToCart,
+} from "@/redux/services/shop/globalSlice";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-
 import {
   Card,
   CardContent,
@@ -14,21 +21,54 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
 import { Button } from "@/components/ui/button";
-
 import { Eye, Heart, BarChart2, ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
+import toast from "react-hot-toast";
+import { useCartSheet } from "@/app/context/CartSheetContext";
 
-export default function ShopProdCard({
-  product,
-  wishlist,
-  compareList,
-  setQuickViewProduct,
-  toggleWishlist,
-  toggleCompare,
-}) {
+export default function ShopProdCard({ product }) {
+  const dispatch = useDispatch();
+  const { openSheet } = useCartSheet();
+  const { wishlist, compareList, cartItems } = useSelector(
+    (state) => state.global
+  );
+
+  useEffect(() => {
+    const storedWishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
+    const storedCompareList = JSON.parse(
+      localStorage.getItem("compareList") || "[]"
+    );
+    const storedCartItems = JSON.parse(
+      localStorage.getItem("cartItems") || "[]"
+    );
+    storedWishlist.forEach((id) => dispatch(toggleWishlist(id)));
+    storedCompareList.forEach((id) => dispatch(toggleCompare(id)));
+    storedCartItems.forEach((item) => dispatch(addToCart(item)));
+  }, [dispatch]);
+
+  const handleQuickView = (product) => {
+    dispatch(setQuickView(product));
+  };
+
+  const handleWishlist = (productId) => {
+    dispatch(toggleWishlist(productId));
+    localStorage.setItem("wishlist", JSON.stringify(wishlist)); // Persist wishlist
+  };
+
+  const handleCompare = (product) => {
+    dispatch(toggleCompare(product));
+    localStorage.setItem("compareList", JSON.stringify(compareList)); // Persist compare list
+  };
+
+  const handleAddToCart = (product) => {
+    dispatch(addToCart(product));
+    localStorage.setItem("cartItems", JSON.stringify(cartItems)); // Persist cart items
+    toast.success("Product added to cart!");
+    openSheet("cart");
+  };
+
   return (
     <div>
       <Card key={product.id} className="overflow-hidden group relative">
@@ -41,7 +81,7 @@ export default function ShopProdCard({
                   variant="secondary"
                   size="icon"
                   className="rounded-full bg-white bg-opacity-80 hover:bg-opacity-100"
-                  onClick={() => setQuickViewProduct(product)}
+                  onClick={() => handleQuickView(product)}
                 >
                   <Eye size={16} />
                 </Button>
@@ -61,7 +101,7 @@ export default function ShopProdCard({
                   className={`rounded-full bg-white bg-opacity-80 hover:bg-opacity-100 ${
                     wishlist.includes(product.id) ? "text-red-500" : ""
                   }`}
-                  onClick={() => toggleWishlist(product.id)}
+                  onClick={() => handleWishlist(product.id)}
                 >
                   <Heart
                     size={16}
@@ -90,7 +130,7 @@ export default function ShopProdCard({
                   className={`rounded-full bg-white bg-opacity-80 hover:bg-opacity-100 ${
                     compareList.includes(product.id) ? "text-blue-500" : ""
                   }`}
-                  onClick={() => toggleCompare(product.id)}
+                  onClick={() => handleCompare(product)}
                 >
                   <BarChart2 size={16} />
                 </Button>
@@ -106,11 +146,15 @@ export default function ShopProdCard({
           </TooltipProvider>
         </div>
 
-        <Image
-          src={product.src}
-          alt={product.label}
-          className="h-48 w-full object-cover"
-        />
+        <div className="relative w-full aspect-square overflow-hidden">
+          <Image
+            src={product.src}
+            alt={product.label}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+        </div>
         <CardHeader>
           <CardTitle className="text-lg">{product.label}</CardTitle>
           <div className="flex items-center text-sm space-x-1">
@@ -138,7 +182,11 @@ export default function ShopProdCard({
               </span>
             )}
           </div>
-          <Button variant={"secondary_btn"} size={"lg"}>
+          <Button
+            onClick={() => handleAddToCart(product)}
+            variant={"secondary_btn"}
+            size={"lg"}
+          >
             <ShoppingCart size={16} className="mr-1" />
             Add to Cart
           </Button>

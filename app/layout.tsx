@@ -6,6 +6,8 @@ import { StoreProvider } from "@/redux/stores/StoreProvider";
 import { AuthProvider } from "@/redux/stores/AuthProvider";
 import { Toaster } from "react-hot-toast";
 import PageLoader from "@/components/PageLoader";
+import { CartSheetProvider } from "@/app/context/CartSheetContext";
+import { NuqsAdapter } from 'nuqs/adapters/next/app'
 
 // Load Google Fonts
 const geist = Geist({
@@ -40,20 +42,24 @@ export default function RootLayout({
         className={`font-sans antialiased leading-relaxed ${geist.variable} ${geistMono.variable} ${rubik.variable} dark:bg-slate-950 dark:text-white bg-gray-50 text-gray-900`}
         style={{ fontFamily: "'Rubik', var(--font-rubik), sans-serif" }}
       >
-        <StoreProvider>
-          <AuthProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <PageLoader />
-              {children}
-              <Toaster />
-            </ThemeProvider>
-          </AuthProvider>
-        </StoreProvider>
+        <NuqsAdapter>
+          <StoreProvider>
+            <AuthProvider>
+              <CartSheetProvider>
+                <ThemeProvider
+                  attribute="class"
+                  defaultTheme="system"
+                  enableSystem
+                  disableTransitionOnChange
+                >
+                  {/* <PageLoader /> */}
+                  {children}
+                  <Toaster />
+                </ThemeProvider>
+              </CartSheetProvider>
+            </AuthProvider>
+          </StoreProvider>
+        </NuqsAdapter>
       </body>
     </html>
   );

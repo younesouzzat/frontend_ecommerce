@@ -4,6 +4,8 @@ import FourthTabNavigation from "./FourthTabNavigation";
 import { bglaptop, bgwatch } from "@/utils/assets";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
+import { routes } from "@/utils/routes";
+import Link from "next/link";
 
 const Items = [
   {
@@ -11,6 +13,7 @@ const Items = [
     subtitle: "Self Balancing Scooter",
     minisubtitle: "Mini Two Wheel",
     image: bgwatch,
+    link: routes.shop,
     buttonText: "Go Shop",
   },
   {
@@ -18,6 +21,7 @@ const Items = [
     subtitle: "in Accessories at Best Prices.",
     minisubtitle: "New Arrivals",
     image: bglaptop,
+    link: routes.shop,
     buttonText: "Go Shop",
   },
 ];
@@ -51,9 +55,11 @@ export default function HotSells() {
                 {item.subtitle}
               </span>
               {item.buttonText && (
-                <Button variant={"secondary_btn"} size={"custom_sm"}>
-                  {item.buttonText}
-                </Button>
+                <Link href={item.link} >
+                  <Button variant={"secondary_btn"} size={"custom_sm"}>
+                    {item.buttonText}
+                  </Button>
+                </Link>
               )}
             </div>
           </div>

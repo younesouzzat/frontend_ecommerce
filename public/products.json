@@ -1,0 +1,92 @@
+[
+    {
+      "id": 1,
+      "src": "prod1",
+      "label": "Bevigac Gamepad",
+      "price": 220.0,
+      "old_price": 250.0,
+      "has_promo": true,
+      "sells": 30,
+      "targetDate": "2025-03-15T00:00:00",
+      "rating": 4.6,
+      "category": "electronics",
+      "tags": ["wireless", "audio"],
+      "description":
+        "Premium wireless headphones with active noise cancellation and up to 30 hours of battery life. Delivers rich, immersive sound quality."
+    },
+    {
+      "id": 2,
+      "src": "prod2",
+      "label": "Headset for Phones",
+      "price": 39.0,
+      "old_price": 0,
+      "has_promo": false,
+      "sells": 35,
+      "targetDate": "2025-03-14T00:00:00",
+      "rating": 4.0,
+      "category": "electronics",
+      "tags": ["wireless", "audio"],
+      "description":
+        "Premium wireless headphones with active noise cancellation and up to 30 hours of battery life. Delivers rich, immersive sound quality."
+    },
+    {
+      "id": 3,
+      "src": "prod3",
+      "label": "Kotion Headset",
+      "price": 29.0,
+      "old_price": 49.0,
+      "has_promo": true,
+      "sells": 85,
+      "targetDate": "2025-03-15T00:00:00",
+      "rating": 4.5,
+      "category": "electronics",
+      "tags": ["wireless", "audio"],
+      "description":
+        "Premium wireless headphones with active noise cancellation and up to 30 hours of battery life. Delivers rich, immersive sound quality."
+    },
+    {
+      "id": 4,
+      "src": "prod4",
+      "label": "Fuers Outdoor",
+      "price": 499.0,
+      "old_price": 520.0,
+      "has_promo": true,
+      "sells": 90,
+      "targetDate": "2025-04-2T00:00:00",
+      "rating": 3.5,
+      "category": "electronics",
+      "tags": ["wireless", "audio"],
+      "description":
+        "Premium wireless headphones with active noise cancellation and up to 30 hours of battery life. Delivers rich, immersive sound quality."
+    },
+    {
+      "id": 5,
+      "src": "prod5",
+      "label": "Metal Body Mobile",
+      "price": 220.0,
+      "old_price": 0,
+      "has_promo": false,
+      "sells": 10,
+      "targetDate": "2025-03-15T00:00:00",
+      "rating": 5.0,
+      "category": "electronics",
+      "tags": ["wireless", "audio"],
+      "description":
+        "Premium wireless headphones with active noise cancellation and up to 30 hours of battery life. Delivers rich, immersive sound quality."
+    },
+    {
+      "id": 6,
+      "src": "prod6",
+      "label": "Stereo Headset",
+      "price": 220.0,
+      "old_price": 250.0,
+      "has_promo": true,
+      "sells": 75,
+      "targetDate": "2025-04-2T00:00:00",
+      "rating": 4.9,
+      "category": "electronics",
+      "tags": ["wireless", "audio"],
+      "description":
+        "Premium wireless headphones with active noise cancellation and up to 30 hours of battery life. Delivers rich, immersive sound quality."
+    }
+]

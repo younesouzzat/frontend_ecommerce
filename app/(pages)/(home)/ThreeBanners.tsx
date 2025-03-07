@@ -3,18 +3,22 @@ import { headphone1, laptop1, phone1 } from "@/utils/assets";
 import Image from "next/image";
 import React from "react";
 import { Button } from "@/components/ui/button";
+import { routes } from "@/utils/routes";
+import Link from "next/link";
 
 const Items = [
   {
     title: "Electronics Minimal",
     subtitle: "Get Holiday Deals",
     image: headphone1,
+    link: routes.shop,
     buttonText: "View Collections",
   },
   {
     title: "Get 50% Off",
     subtitle: "Every Handset Retina Item",
     image: phone1,
+    link: routes.shop,
     buttonText: "Go Shop",
   },
   {
@@ -36,9 +40,11 @@ export default function RecentProduct() {
             <p className="text-lg font-medium text-blue-800">{item.title}</p>
             <span className="text-2xl font-medium">{item.subtitle}</span>
             {item.buttonText && (
-              <Button variant={"secondary_btn"} size={"primarybtn"}>
-                {item.buttonText}
-              </Button>
+              <Link href={item.link}>
+                <Button variant={"secondary_btn"} size={"primarybtn"}>
+                  {item.buttonText}
+                </Button>
+              </Link>
             )}
           </div>
           <div className="w-2/5 relative flex items-center justify-center">

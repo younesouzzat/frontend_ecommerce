@@ -15,6 +15,8 @@ import {
 } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import ShopCartSheet from "../shop/ShopCartSheet";
+import { routes } from "@/utils/routes";
 
 interface NavItems {
   title: string;
@@ -23,7 +25,7 @@ interface NavItems {
 
 const items: NavItems[] = [
   { title: "Home", href: "/" },
-  { title: "Shop", href: "/shop" },
+  { title: "Shop", href: routes.shop },
   { title: "About", href: "/about-us" },
   { title: "Contact", href: "/contact-us" },
 ];
@@ -34,7 +36,7 @@ export default function Header() {
       <div className="flex md:hidden w-1/3 md:w-1/4">
         <Sheet>
           <SheetTrigger>
-              <Menu />
+            <Menu />
           </SheetTrigger>
           <SheetContent side={"left"}>
             <SheetHeader>
@@ -72,20 +74,7 @@ export default function Header() {
             <HeartIconWithBadge />
           </Link>
 
-          <Sheet>
-            <SheetTrigger>
-              <BasketIconWithBadge />
-            </SheetTrigger>
-            <SheetContent side={"right"}>
-              <SheetHeader>
-                <SheetTitle>Are you absolutely sure?</SheetTitle>
-                <SheetDescription>
-                  This action cannot be undone. This will permanently delete
-                  your account and remove your data from our servers.
-                </SheetDescription>
-              </SheetHeader>
-            </SheetContent>
-          </Sheet>
+          <ShopCartSheet />
 
           <ThemeToggle />
         </div>

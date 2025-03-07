@@ -7,14 +7,14 @@ import {
 } from "@/components/ui/carousel";
 import CardProd from "./CardProd";
 
-export function SingleProductCarousel({ items, setApi }: any) {
+export function SingleProductCarousel({ items, setApi, isLoading }: any) {
   return (
     <Carousel setApi={setApi} opts={{ loop: true }} className="w-full max-w-xs">
       <CarouselContent>
         {items.map((item, index) => (
           <CarouselItem className="relative" key={index}>
             <div className="p-1">
-              <CardProd item={item} />
+              <CardProd item={item} isLoading={isLoading} />
             </div>
           </CarouselItem>
         ))}

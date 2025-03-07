@@ -2,6 +2,7 @@ import React from "react";
 import { DropdownMenuDemo } from "./SearchParts/DropdownMenuDemo";
 import SearchForm from "./SearchParts/SearchForm";
 import { Button } from "@/components/ui/button";
+import { routes } from "@/utils/routes";
 
 interface NavItems {
   title: string;
@@ -10,7 +11,7 @@ interface NavItems {
 
 const items: NavItems[] = [
   { title: "Home", href: "/" },
-  { title: "Shop", href: "/shop" },
+  { title: "Shop", href: routes.shop },
   { title: "About", href: "/about-us" },
   { title: "Contact", href: "/contact-us" },
 ];
@@ -31,7 +32,7 @@ export default function SearchArea() {
           className="flex flex-col gap-y-0.5 items-center justify-center text-center"
         >
           <strong className="text-md font-bold">
-            BLACK FRIDAY
+            WHITE FRIDAY
           </strong>
           <span className="text-xs">Get 45% Off!</span>
         </Button>

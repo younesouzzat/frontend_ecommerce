@@ -15,7 +15,6 @@ export default function CountdownTimer({ targetDate }: CountdownTimerProps) {
   useEffect(() => {
     const targetDateObj = new Date(targetDate);
 
-    // Validate if the targetDate is a valid date
     if (isNaN(targetDateObj.getTime())) {
       console.error("Invalid target date:", targetDate);
       return;

@@ -12,6 +12,8 @@ import {
   CarouselApi,
 } from "@/components/ui/carousel";
 import { slider1, slider2, slider3 } from "@/utils/assets";
+import { routes } from "@/utils/routes";
+import Link from "next/link";
 
 const slides = [
   {
@@ -105,9 +107,11 @@ const HomeSlider = () => {
                     <p className="text-lg md:text-xl mb-6 drop-shadow-md">
                       {slide.description}
                     </p>
-                    <Button className="bg-white text-black hover:bg-gray-100 shadow-lg">
-                      Shop Now
-                    </Button>
+                    <Link href={routes.shop}>
+                      <Button className="bg-white text-black hover:bg-gray-100 shadow-lg">
+                        Shop Now
+                      </Button>
+                    </Link>
                   </div>
 
                   <div className="hidden md:flex items-center justify-center">

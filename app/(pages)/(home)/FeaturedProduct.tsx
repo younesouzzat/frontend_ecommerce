@@ -8,28 +8,23 @@ import { type CarouselApi } from "@/components/ui/carousel";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-const items = [
-  {
-    src: prod7,
-    label: "Sonny Gamepad",
-    price: 39.0,
-    old_price: 0,
-    has_promo: false,
-    sells: 30,
-    targetDate: "2025-12-31T00:00:00",
-  },
-  {
-    src: prod8,
-    label: "Touchescreen Laptop",
-    price: 220.0,
-    old_price: 250.0,
-    has_promo: true,
-    sells: 70,
-    targetDate: "2025-12-31T00:00:00",
-  },
-];
+interface Product {
+  image: string;
+  title: string;
+  price: number;
+  is_promotion?: boolean;
+  price_special?: number;
+}
 
-export default function FeaturedProduct() {
+interface FeaturedProductProps {
+  products: Product[];
+  isLoading: boolean;
+}
+
+const FeaturedProduct: React.FC<FeaturedProductProps> = ({
+  products,
+  isLoading,
+}) => {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
 
@@ -46,7 +41,9 @@ export default function FeaturedProduct() {
       <div className="flex w-full md:w-2/6">
         <Card className="w-full rounded-sm border-2 border-primarybackground">
           <CardTitle className="flex justify-between items-center bg-primarybackground p-3">
-            <div className="text-xl text-white dark:text-black">Deals of the week</div>
+            <div className="text-xl text-white dark:text-black">
+              Deals of the week
+            </div>
             <div className="flex justify-end space-x-1">
               <Button
                 variant={"arrows_btn"}
@@ -65,14 +62,20 @@ export default function FeaturedProduct() {
             </div>
           </CardTitle>
           <CardContent className="flex justify-center">
-            <SingleProductCarousel items={items} setApi={setApi} />
+            <SingleProductCarousel
+              items={products}
+              isLoading={isLoading}
+              setApi={setApi}
+            />
           </CardContent>
         </Card>
       </div>
 
       <div className="flex w-full md:w-4/6">
-        <SecondTabNavigation />
+        <SecondTabNavigation products={products} isLoading={isLoading} />
       </div>
     </div>
   );
-}
+};
+
+export default FeaturedProduct;

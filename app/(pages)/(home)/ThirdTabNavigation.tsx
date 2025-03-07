@@ -8,10 +8,10 @@ import { useState } from "react";
 import React from "react";
 
 const tabs = [
-  { id: "on sale", label: "On Sale" },
-  { id: "hot sale", label: "Hot Sale" },
+  { id: "onsale", label: "On Sale" },
+  { id: "hotsale", label: "Hot Sale" },
   { id: "trend", label: "Trend" },
-  { id: "best sale", label: "Best Sale" },
+  { id: "bestsale", label: "Best Sale" },
 ];
 
 const items = [

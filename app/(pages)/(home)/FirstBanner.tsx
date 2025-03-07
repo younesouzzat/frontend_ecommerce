@@ -38,7 +38,7 @@ const features = [
   },
 ];
 
-const FirstBanner = () => {
+const FirstBanner = ({ categories, products, isLoading }) => {
   return (
     <div className="secondary-container flex flex-col md:flex-row gap-y-2 md:space-x-2">
       <div className="flex w-full md:w-1/6">
@@ -63,7 +63,7 @@ const FirstBanner = () => {
       </div>
 
       <div className="flex w-full md:w-5/6">
-        <TabNavigation />
+        <TabNavigation categories={categories} products={products} isLoading={isLoading} />
       </div>
     </div>
   );

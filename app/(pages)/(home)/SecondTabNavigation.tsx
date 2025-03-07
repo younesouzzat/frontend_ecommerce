@@ -1,75 +1,49 @@
 "use client";
 
+import ImageProdSkeleton from "@/app/components/skeletons/ImageProdSkeleton";
 import { Card, CardContent } from "@/components/ui/card";
-import { prod1, prod2, prod3, prod4, prod5, prod6 } from "@/utils/assets";
-import { Heart, HeartIcon, Star, StarIcon } from "lucide-react";
+import { HeartIcon, StarIcon } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import React from "react";
 
 const tabs = [
-  { id: "on sale", label: "On Sale" },
-  { id: "hot sale", label: "Hot Sale" },
+  { id: "onsale", label: "On Sale" },
+  { id: "hotsale", label: "Hot Sale" },
   { id: "trend", label: "Trend" },
-  { id: "best sale", label: "Best Sale" },
+  { id: "bestsale", label: "Best Sale" },
 ];
 
-const items = [
-  {
-    src: prod1,
-    label: "Bevigac Gamepad",
-    price: 220.0,
-    old_price: 250.0,
-    has_promo: true,
-  },
-  {
-    src: prod2,
-    label: "Headset for Phones",
-    price: 39.0,
-    old_price: 0,
-    has_promo: false,
-  },
-  {
-    src: prod3,
-    label: "Kotion Headset",
-    price: 29.0,
-    old_price: 49.0,
-    has_promo: true,
-  },
-  {
-    src: prod4,
-    label: "Fuers Outdoor",
-    price: 499.0,
-    old_price: 520.0,
-    has_promo: true,
-  },
-  {
-    src: prod5,
-    label: "Metal Body Mobile",
-    price: 220.0,
-    old_price: 0,
-    has_promo: false,
-  },
-  {
-    src: prod6,
-    label: "Stereo Headset",
-    price: 220.0,
-    old_price: 250.0,
-    has_promo: true,
-  },
-];
+// Interface for product data
+interface Product {
+  image: string;
+  title: string;
+  price: number;
+  is_promotion?: boolean;
+  price_special?: number;
+}
+
+interface SecondTabNavigationProps {
+  products: Product[];
+  isLoading: boolean;
+}
 
 // Function to get random items
-const getRandomItems = (num: number) =>
-  [...items].sort(() => Math.random() - 0.5).slice(0, num);
+const getRandomItems = (products: Product[], num: number) =>
+  [...products].sort(() => Math.random() - 0.5).slice(0, num);
 
-const SecondTabNavigation = () => {
+const SecondTabNavigation: React.FC<SecondTabNavigationProps> = ({
+  products,
+  isLoading,
+}) => {
   const [activeTab, setActiveTab] = useState(tabs[0].id);
-  const [randomizedItems, setRandomizedItems] = useState(getRandomItems(6));
+  const [randomizedItems, setRandomizedItems] = useState(() =>
+    getRandomItems(products, 6)
+  );
 
   const handleTabChange = (tabId: string) => {
     setActiveTab(tabId);
-    setRandomizedItems(getRandomItems(6));
+    setRandomizedItems(getRandomItems(products, 6));
   };
 
   return (
@@ -103,56 +77,71 @@ const SecondTabNavigation = () => {
 
       <div className="md:h-[90%] flex flex-col justify-start">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
-          {randomizedItems.map((item, index) => (
-            <Card
-              key={index}
-              className="w-full shadow-none cursor-pointer border-none hover:shadow-lg transition-shadow"
-            >
-              <CardContent className="relative flex flex-col items-center text-center group">
-                <div className="absolute top-2 w-full flex justify-between items-center 
-                opacity-0 translate-y-[-10px] transition-all duration-300 
-                group-hover:opacity-100 group-hover:translate-y-0 px-3"
+          {isLoading
+            ? Array.from({ length: 9 }).map((_, index) => (
+                <ImageProdSkeleton index={index} key={index} />
+              ))
+            : randomizedItems.map((item, index) => (
+                <Card
+                  key={index}
+                  className="w-full shadow-none cursor-pointer border-none hover:shadow-lg transition-shadow"
                 >
-                  <div className="flex items-center gap-1 text-yellow-500">
-                    {[...Array(5)].map((_, i) => (
-                      <StarIcon key={i} size={16} className="fill-current" />
-                    ))}
-                  </div>
+                  <CardContent className="relative flex flex-col items-center text-center group">
+                    <div
+                      className="absolute top-2 w-full flex justify-between items-center 
+                    opacity-0 translate-y-[-10px] transition-all duration-300 
+                    group-hover:opacity-100 group-hover:translate-y-0 px-3"
+                    >
+                      <div className="flex items-center gap-1 text-yellow-500">
+                        {[...Array(5)].map((_, i) => (
+                          <StarIcon
+                            key={i}
+                            size={16}
+                            className="fill-current"
+                          />
+                        ))}
+                      </div>
 
-                  <button
-                    className="p-1 rounded-full transition-colors hover:bg-gray-100"
-                    aria-label="Add to Wishlist"
-                  >
-                    <HeartIcon
-                      size={18}
-                      className="text-gray-500 hover:text-red-500"
+                      <button
+                        className="p-1 rounded-full transition-colors hover:bg-gray-100"
+                        aria-label="Add to Wishlist"
+                      >
+                        <HeartIcon
+                          size={18}
+                          className="text-gray-500 hover:text-red-500"
+                        />
+                      </button>
+                    </div>
+
+                    <Image
+                      src={item.image}
+                      alt={item.title}
+                      width={192}
+                      height={192}
+                      className="w-48 h-48 object-cover p-5 transition-opacity group-hover:opacity-50"
                     />
-                  </button>
-                </div>
 
-                <Image
-                  src={item.src}
-                  alt={item.label}
-                  width={192}
-                  height={192}
-                  className="w-48 h-48 object-cover p-5 transition-opacity group-hover:opacity-50"
-                />
+                    <strong className="font-medium mt-2">{item.title}</strong>
 
-                <strong className="font-medium mt-2">{item.label}</strong>
-
-                <div className="flex items-center space-x-2">
-                  <span className="font-semibold text-secondarybackground">
-                    ${item.price.toFixed(2)}
-                  </span>
-                  {item.has_promo && item.old_price > 0 && (
-                    <span className="text-gray-400 line-through text-sm">
-                      ${item.old_price.toFixed(2)}
-                    </span>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                    <div className="flex items-center space-x-2">
+                      {item.is_promotion && item.price_special ? (
+                        <>
+                          <span className="font-semibold text-secondarybackground">
+                            ${item.price_special.toFixed(2)}
+                          </span>
+                          <span className="text-gray-400 line-through text-sm">
+                            ${item.price.toFixed(2)}
+                          </span>
+                        </>
+                      ) : (
+                        <span className="font-semibold text-secondarybackground">
+                          ${item.price.toFixed(2)}
+                        </span>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
         </div>
       </div>
     </div>

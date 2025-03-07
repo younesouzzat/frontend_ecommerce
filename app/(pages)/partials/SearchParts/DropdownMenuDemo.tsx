@@ -4,17 +4,10 @@ import {
   List,
   ChevronDown,
   Laptop,
-  Smartphone,
-  Headphones,
-  Camera,
-  Watch,
-  Tv,
-  Gamepad,
-  Cpu,
-  HardDrive,
-  Printer,
-  Wifi,
-  Mouse,
+  Glasses,
+  Shirt,
+  Footprints,
+  BriefcaseBusiness,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -29,66 +22,58 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { routes } from "@/utils/routes";
+import { useRouter } from "next/navigation";
 
 export function DropdownMenuDemo() {
   const [expandedSubMenu, setExpandedSubMenu] = useState<string | null>(null);
+  const router = useRouter();
 
   const toggleSubMenu = (name: string) => {
     setExpandedSubMenu(expandedSubMenu === name ? null : name);
   };
 
+  const handleCategorySearch = (name: string) => {
+    const searchParams = new URLSearchParams();
+    searchParams.set("category", name.toLowerCase());
+    const searchUrl = `${routes.shop}?${searchParams.toString()}`;
+    window.location.href = searchUrl;
+    // router.push(`${routes.shop}?${searchParams.toString()}`);
+  };
+
   const categories = [
     {
-      id: "computers",
-      name: "Computers & Laptops",
+      id: "clothing",
+      name: "Clothing",
+      icon: <Shirt className="size-5" />,
+    },
+    {
+      id: "accessories",
+      name: "Accessories",
+      icon: <Glasses className="size-5" />,
+    },
+    {
+      id: "bags",
+      name: "Bags",
+      icon: <BriefcaseBusiness className="size-5" />,
+    },
+    {
+      id: "footwear",
+      name: "Footwear",
+      icon: <Footprints className="size-5" />,
+    },
+    {
+      id: "electronics",
+      name: "Electronics",
       icon: <Laptop className="size-5" />,
-      subcategories: [
-        { title: "Gaming Laptops" },
-        { title: "Ultrabooks" },
-        { title: "Desktop PCs" },
-      ],
     },
-    {
-      id: "smartphones",
-      name: "Smartphones & Tablets",
-      icon: <Smartphone className="size-5" />,
-      subcategories: [{ title: "iPhones" }, { title: "Android Phones" }],
-    },
-    {
-      id: "audio",
-      name: "Audio & Headphones",
-      icon: <Headphones className="size-5" />,
-      subcategories: [{ title: "Over-ear" }, { title: "True Wireless" }],
-    },
-    {
-      id: "cameras",
-      name: "Cameras & Photography",
-      icon: <Camera className="size-5" />,
-      subcategories: [{ title: "DSLR" }, { title: "Mirrorless" }],
-    },
-    {
-      id: "tvs",
-      name: "TVs & Home Entertainment",
-      icon: <Tv className="size-5" />,
-      subcategories: [{ title: "4K TVs" }, { title: "Smart TVs" }],
-    },
-    {
-      id: "wearables",
-      name: "Wearable Technology",
-      icon: <Watch className="size-5" />,
-      subcategories: [{ title: "Smartwatches" }, { title: "Fitness Trackers" }],
-    },
-    {
-      id: "gaming",
-      name: "Gaming & Consoles",
-      icon: <Gamepad className="size-5" />,
-      subcategories: [{ title: "PlayStation" }, { title: "Xbox" }],
-    },
-    { id: "components", name: "Computer Components", icon: <Cpu className="size-5" />, subcategories: [] },
-    { id: "storage", name: "Storage Solutions", icon: <HardDrive className="size-5" />, subcategories: [] },
-    { id: "printers", name: "Printers & Scanners", icon: <Printer className="size-5" />, subcategories: [] },
-    { id: "networking", name: "Networking", icon: <Wifi className="size-5" />, subcategories: [] },
-    { id: "accessories", name: "Peripherals & Accessories", icon: <Mouse className="size-5" />, subcategories: [] },
+    // {
+    //   id: "smartphones",
+    //   name: "Smartphones & Tablets",
+    //   icon: <Smartphone className="size-5" />,
+    //   subcategories: [{ title: "iPhones" }, { title: "Android Phones" }],
+    //   IF Doesnt have a sub cat : subcategories: [],
+    // },
   ];
 
   return (
@@ -116,13 +101,14 @@ export function DropdownMenuDemo() {
               <DropdownMenuSubTrigger
                 onMouseEnter={() => setExpandedSubMenu(category.id)}
                 onMouseLeave={() => setExpandedSubMenu(null)}
+                onClick={() => handleCategorySearch(category.name)}
                 className="flex items-center space-x-2 px-2 py-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer"
               >
                 {category.icon}
                 <span>{category.name}</span>
               </DropdownMenuSubTrigger>
 
-              {category.subcategories.length > 0 && (
+              {/* {category.subcategories.length > 0 && (
                 <DropdownMenuPortal>
                   <DropdownMenuSubContent className="bg-white dark:bg-gray-900 border dark:border-gray-700">
                     {category.subcategories.map((subcategory, index) => (
@@ -135,7 +121,7 @@ export function DropdownMenuDemo() {
                     ))}
                   </DropdownMenuSubContent>
                 </DropdownMenuPortal>
-              )}
+              )} */}
             </DropdownMenuSub>
           </DropdownMenuGroup>
         ))}
