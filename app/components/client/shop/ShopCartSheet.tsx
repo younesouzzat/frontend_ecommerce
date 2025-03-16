@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import BasketIconWithBadge from "../partials/smallIcons/BasketIconWithBadge";
+import BasketIconWithBadge from "@/app/(pages)/partials/smallIcons/BasketIconWithBadge";
 import {
   removeFromCart,
   clearCart,
@@ -20,9 +20,13 @@ import {
 import { X } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useCartSheet } from "@/app/context/CartSheetContext";
+import Link from "next/link";
+import { routes } from "@/utils/routes";
+import { useRouter } from "next/navigation";
 
 export default function ShopCartSheet() {
   const dispatch = useDispatch();
+  const router = useRouter();
   const { cartItems } = useSelector((state: RootState) => state.global);
   const { isSheetOpen, closeSheet, openSheet } = useCartSheet();
 
@@ -54,6 +58,11 @@ export default function ShopCartSheet() {
 
   const handleClearItems = () => {
     dispatch(clearCart());
+  };
+  
+  const handleCheckout = () => {
+    router.push(routes.checkout);
+    closeSheet("cart");
   };
 
   const handleIncrement = (id: number, quantity: number) => {
@@ -96,14 +105,16 @@ export default function ShopCartSheet() {
                 >
                   <div className="flex items-center gap-4">
                     <Image
-                      src={item.src}
-                      alt={item.label}
+                      src={item.image}
+                      alt={item.title}
+                      width={100}
+                      height={100}
                       className="w-16 h-16 object-cover rounded-md"
                     />
                     <div className="flex flex-col gap-2">
                       <div className="flex flex-col gap-2">
                         <span className="text-sm font-semibold">
-                          {item.label}
+                          {item.title}
                         </span>
                         <span className="text-sm text-gray-500">
                           ${item.price.toFixed(2)}
@@ -143,7 +154,7 @@ export default function ShopCartSheet() {
                     variant="ghost"
                     onClick={() => handleRemoveItem(item.id)}
                     className="ml-4"
-                    aria-label={`Remove ${item.label} from cart`}
+                    aria-title={`Remove ${item.title} from cart`}
                   >
                     <X />
                   </Button>
@@ -185,7 +196,13 @@ export default function ShopCartSheet() {
               >
                 Clear Cart
               </Button>
-              <Button className="w-1/2">Proceed to Checkout</Button>
+                <Button
+                  asChild
+                  onClick={handleCheckout}
+                  className="w-full md:w-1/2 flex cursor-pointer items-center justify-center gap-2"
+                >
+                  <span>Proceed to Checkout</span>
+                </Button>
             </div>
           )}
         </SheetContent>

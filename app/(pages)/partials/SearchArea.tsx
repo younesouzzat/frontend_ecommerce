@@ -1,13 +1,11 @@
 import React from "react";
-import { DropdownMenuDemo } from "./SearchParts/DropdownMenuDemo";
+
 import SearchForm from "./SearchParts/SearchForm";
 import { Button } from "@/components/ui/button";
 import { routes } from "@/utils/routes";
-
-interface NavItems {
-  title: string;
-  href: string;
-}
+import { CategoryProps, NavItems } from "@/types";
+import DropdownMenuDemo from "./SearchParts/DropdownMenuDemo";
+import { useRouter } from "next/navigation";
 
 const items: NavItems[] = [
   { title: "Home", href: "/" },
@@ -16,18 +14,25 @@ const items: NavItems[] = [
   { title: "Contact", href: "/contact-us" },
 ];
 
-export default function SearchArea() {
+const SearchArea : React.FC<CategoryProps> = ({ categories, isLoading }) => {
+  const router = useRouter();
+
+  const handleShop = () => {
+    router.push(routes.shop);
+  };
+  
   return (
     <div className="container hidden py-4 md:flex flex-col md:flex-row items-center">
       <div className="block-1 flex justify-start w-full md:w-1/5">
-        <DropdownMenuDemo />
+        <DropdownMenuDemo categories={categories}  isLoading={isLoading} />
       </div>
       <div className="block-2 w-full md:w-3/5 md:px-8">
-        <SearchForm />
+        <SearchForm categories={categories}  isLoading={isLoading} />
       </div>
       <div className="block-3 w-full md:w-1/5">
         <Button
           size="btnbf"
+          onClick={handleShop}
           variant="custom_btnbf"
           className="flex flex-col gap-y-0.5 items-center justify-center text-center"
         >
@@ -40,3 +45,4 @@ export default function SearchArea() {
     </div>
   );
 }
+export default SearchArea;

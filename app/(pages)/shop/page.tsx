@@ -1,13 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -15,218 +9,139 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
-
-import { prod1, prod2, prod3, prod4, prod5, prod6 } from "@/utils/assets";
-import ShopProdCard from "./ShopProdCard";
 import { useSearchParams } from "next/navigation";
-
-interface Product {
-  id: number;
-  src: string;
-  label: string;
-  price: number;
-  old_price: number;
-  has_promo: boolean;
-  sells: number;
-  targetDate: string;
-  rating: number;
-  category: string;
-  tags: string[];
-  description: string;
-}
+import ShopProdCard from "@/app/components/client/shop/ShopProdCard";
+import { useGetProductsQuery } from "@/redux/services/client/products";
+import { useGetCategoriesQuery } from "@/redux/services/client/categories";
+import { PaginationDemo } from "@/app/components/client/shop/PaginationDemo";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Frown } from "lucide-react";
 
 export default function ShopPage() {
-  const initialProducts = [
-    {
-      id: 1,
-      src: prod1,
-      label: "Bevigac Gamepad",
-      price: 220.0,
-      old_price: 250.0,
-      has_promo: true,
-      sells: 30,
-      targetDate: "2025-03-15T00:00:00",
-      rating: 4.6,
-      category: "electronics",
-      tags: ["wireless", "audio"],
-      description:
-        "Premium wireless headphones with active noise cancellation and up to 30 hours of battery life. Delivers rich, immersive sound quality.",
-    },
-    {
-      id: 2,
-      src: prod2,
-      label: "Headset for Phones",
-      price: 39.0,
-      old_price: 0,
-      has_promo: false,
-      sells: 35,
-      targetDate: "2025-03-14T00:00:00",
-      rating: 4.0,
-      category: "electronics",
-      tags: ["wireless", "audio"],
-      description:
-        "Premium wireless headphones with active noise cancellation and up to 30 hours of battery life. Delivers rich, immersive sound quality.",
-    },
-    {
-      id: 3,
-      src: prod3,
-      label: "Kotion Headset",
-      price: 29.0,
-      old_price: 49.0,
-      has_promo: true,
-      sells: 85,
-      targetDate: "2025-03-15T00:00:00",
-      rating: 4.5,
-      category: "electronics",
-      tags: ["wireless", "audio"],
-      description:
-        "Premium wireless headphones with active noise cancellation and up to 30 hours of battery life. Delivers rich, immersive sound quality.",
-    },
-    {
-      id: 4,
-      src: prod4,
-      label: "Fuers Outdoor",
-      price: 499.0,
-      old_price: 520.0,
-      has_promo: true,
-      sells: 90,
-      targetDate: "2025-04-2T00:00:00",
-      rating: 3.5,
-      category: "electronics",
-      tags: ["wireless", "audio"],
-      description:
-        "Premium wireless headphones with active noise cancellation and up to 30 hours of battery life. Delivers rich, immersive sound quality.",
-    },
-    {
-      id: 5,
-      src: prod5,
-      label: "Metal Body Mobile",
-      price: 220.0,
-      old_price: 0,
-      has_promo: false,
-      sells: 10,
-      targetDate: "2025-03-15T00:00:00",
-      rating: 5.0,
-      category: "electronics",
-      tags: ["wireless", "audio"],
-      description:
-        "Premium wireless headphones with active noise cancellation and up to 30 hours of battery life. Delivers rich, immersive sound quality.",
-    },
-    {
-      id: 6,
-      src: prod6,
-      label: "Stereo Headset",
-      price: 220.0,
-      old_price: 250.0,
-      has_promo: true,
-      sells: 75,
-      targetDate: "2025-04-2T00:00:00",
-      rating: 4.9,
-      category: "electronics",
-      tags: ["wireless", "audio"],
-      description:
-        "Premium wireless headphones with active noise cancellation and up to 30 hours of battery life. Delivers rich, immersive sound quality.",
-    },
-  ];
-
+  const { data: categories, isLoading: isLoadingCat } = useGetCategoriesQuery();
   const searchParams = useSearchParams();
-  const qParam = searchParams.get('q') || '';
-  const categoryParam = searchParams.get('category') || 'all';
+  const [category_id, setCategoryID] = useState(0);
+  const qParam = searchParams.get("q") || "";
+  const categoryParam = searchParams.get("category") || "all";
 
-  // State
-  const [products, setProducts] = useState<Product[]>(initialProducts);
-  const [categoryFilter, setCategoryFilter] = useState(categoryParam);
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 500]);
-  const [searchQuery, setSearchQuery] = useState(qParam);
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [sortBy, setSortBy] = useState("featured");
-
-  const allTags = [
-    "vintage",
-    "casual",
-    "leather",
-    "premium",
-    "canvas",
-    "durable",
-    "sports",
-    "comfortable",
-    "wireless",
-    "audio",
-    "denim",
-  ];
-
-  const categories = [
-    "clothing",
-    "accessories",
-    "bags",
-    "footwear",
-    "electronics",
-  ];
+  const [page, setPage] = useState(1);
+  const perPage = 6;
 
   useEffect(() => {
-    let result = [...initialProducts];
-
-    result  = result.filter(
-      (product) =>
-        product.price >= priceRange[0] && product.price <= priceRange[1]
-    );
-
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      result = result.filter(
-        (product) =>
-          product.label.toLowerCase().includes(query) ||
-          product.category.toLowerCase().includes(query) ||
-          product.tags.some((tag) => tag.toLowerCase().includes(query))
-      );
+    if(!isLoadingCat && categories.length > 0) {
+      const findCat = categories?.filter((elem: any) => {
+        return (elem.name).toLowerCase() === categoryParam.toLowerCase();
+      });
+      setCategoryID(findCat.length != 0 ? findCat[0].id : categoryParam);
     }
+  },[categoryParam, categories, isLoadingCat])
 
-    if (categoryFilter && categoryFilter !== "all") {
-      result = result.filter(
-        (product) => product.category === categoryFilter
-      );
+  const [formState, setFormState] = useState({
+    categoryFilter: category_id ? category_id : categoryParam,
+    priceRange: [0, 500] as [number, number],
+    searchQuery: qParam,
+    sortBy: "featured",
+  });
+
+  const [appliedFilters, setAppliedFilters] = useState({
+    categoryFilter: category_id ? category_id : categoryParam,
+    priceRange: [0, 500] as [number, number],
+    searchQuery: qParam,
+    sortBy: "featured",
+  });
+
+  const [executeQuery, setExecuteQuery] = useState(false);
+
+  const updateFormState = (field: string, value: any) => {
+    setFormState((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const formatPriceRange = (range: [number, number]): string => {
+    return `${range[0]},${range[1]}`;
+  };
+
+  const { data, isLoading } = useGetProductsQuery(
+    {
+      page,
+      perPage,
+      searchQuery: appliedFilters.searchQuery,
+      categoryFilter: category_id != 0 ? category_id : (appliedFilters.categoryFilter || "all"),
+      priceRange: formatPriceRange(appliedFilters.priceRange) || "0,500",
+    },
+    {
+      skip: !executeQuery,
+      refetchOnMountOrArgChange: true,
+      refetchOnFocus: true,
+      refetchOnReconnect: true,
     }
+  );
 
-    if (selectedTags.length > 0) {
-      result = result.filter((product) =>
-        selectedTags.some((tag) => product.tags.includes(tag))
-      );
-    }
+  useEffect(() => {
+    setExecuteQuery(true);
+  }, []);
 
-    if (sortBy === "priceAsc") {
-      result.sort((a, b) => a.price - b.price);
-    } else if (sortBy === "priceDesc") {
-      result.sort((a, b) => b.price - a.price);
-    } else if (sortBy === "rating") {
-      result.sort((a, b) => b.rating - a.rating);
-    }
+  const products = data?.products || [];
+  const totalPages = data?.last_page || 1;
+  const currentPage = data?.current_page || 1;
 
-    setProducts(result);
-  }, [categoryFilter, priceRange, searchQuery, selectedTags, sortBy]);
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+    setExecuteQuery(true);
+  };
 
-  const handleTagChange = (tag: string) => {
-    setSelectedTags((prev) =>
-      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
-    );
+  const applyFilters = () => {
+    setAppliedFilters({ ...formState });
+    setPage(1);
+    setExecuteQuery(true);
   };
 
   const resetFilters = () => {
-    setCategoryFilter("all");
-    setPriceRange([0, 500]);
-    setSearchQuery("");
-    setSelectedTags([]);
-    setSortBy("featured");
+    const defaultFilters = {
+      categoryFilter: "all",
+      priceRange: [0, 500] as [number, number],
+      searchQuery: "",
+      sortBy: "featured",
+    };
+
+    setFormState(defaultFilters);
+    setAppliedFilters(defaultFilters);
+    setPage(1);
+    setExecuteQuery(true);
   };
+
+  const filteredProducts = products
+    .filter((product) => {
+      const { searchQuery } = appliedFilters;
+      return searchQuery
+        ? product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            (product.category?.toLowerCase() || "").includes(
+              searchQuery.toLowerCase()
+            )
+        : true;
+    })
+    .sort((a, b) => {
+      switch (appliedFilters.sortBy) {
+        case "priceAsc":
+          return a.price - b.price;
+        case "priceDesc":
+          return b.price - a.price;
+        case "rating":
+          return b.rating - a.rating;
+        default:
+          return 0;
+      }
+    });
 
   return (
     <div className="container mx-auto py-8">
       <h1 className="text-3xl font-medium mb-8">Shop Our Products</h1>
-
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="md:col-span-1 space-y-6">
           <Card>
@@ -235,33 +150,34 @@ export default function ShopPage() {
             </CardHeader>
             <CardContent className="space-y-6">
               <div>
-                <Label htmlFor="search" className="mb-2 block">
-                  Search
-                </Label>
+                <Label htmlFor="search">Search</Label>
                 <Input
                   id="search"
                   placeholder="Search products..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  value={formState.searchQuery}
+                  onChange={(e) =>
+                    updateFormState("searchQuery", e.target.value)
+                  }
                 />
               </div>
 
               <div>
-                <Label htmlFor="category" className="mb-2 block">
-                  Category
-                </Label>
+                <Label>Category</Label>
                 <Select
-                  value={categoryFilter}
-                  onValueChange={setCategoryFilter}
+                  value={formState.categoryFilter}
+                  onValueChange={(value) =>
+                    updateFormState("categoryFilter", value)
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="All Categories" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Categories</SelectItem>
-                    {categories.map((category) => (
-                      <SelectItem key={category} value={category}>
-                        {category.charAt(0).toUpperCase() + category.slice(1)}
+                    {categories?.map((category) => (
+                      <SelectItem key={category.id} value={category.id}>
+                        {category.name.charAt(0).toUpperCase() +
+                          category.name.slice(1)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -270,90 +186,125 @@ export default function ShopPage() {
 
               <div>
                 <Label className="mb-2 block">Price Range</Label>
-                <div className="pt-4 pb-2">
-                  <Slider
-                    defaultValue={[0, 500]}
-                    min={0}
-                    max={500}
-                    step={1}
-                    value={priceRange}
-                    onValueChange={setPriceRange}
-                  />
-                </div>
+                <Slider
+                  min={0}
+                  max={500}
+                  step={1}
+                  value={formState.priceRange}
+                  onValueChange={(value) =>
+                    updateFormState("priceRange", value as [number, number])
+                  }
+                />
                 <div className="flex justify-between text-sm">
-                  <span>${priceRange[0]}</span>
-                  <span>${priceRange[1]}</span>
+                  <span>${formState.priceRange[0]}</span>
+                  <span>${formState.priceRange[1]}</span>
                 </div>
               </div>
 
               <div>
-                <Label className="mb-2 block">Tags</Label>
-                <div className="space-y-2">
-                  {allTags.map((tag) => (
-                    <div key={tag} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={`tag-${tag}`}
-                        checked={selectedTags.includes(tag)}
-                        onCheckedChange={() => handleTagChange(tag)}
-                      />
-                      <Label htmlFor={`tag-${tag}`} className="cursor-pointer">
-                        {tag.charAt(0).toUpperCase() + tag.slice(1)}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
+                <Label>Sort By</Label>
+                <Select
+                  value={formState.sortBy}
+                  onValueChange={(value) => updateFormState("sortBy", value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Featured" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="featured">Featured</SelectItem>
+                    <SelectItem value="priceAsc">Price: Low to High</SelectItem>
+                    <SelectItem value="priceDesc">
+                      Price: High to Low
+                    </SelectItem>
+                    <SelectItem value="rating">Rating</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
-              <Button
-                variant="outline"
-                className="w-full"
-                onClick={resetFilters}
-              >
-                Reset Filters
-              </Button>
+              <div className="flex flex-col gap-2">
+                <Button
+                  onClick={applyFilters}
+                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                >
+                  Apply Filters
+                </Button>
+
+                <Button variant="outline" onClick={resetFilters}>
+                  Reset All Filters
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </div>
 
         <div className="md:col-span-3">
-          <div className="flex justify-between items-center mb-6">
-            <p className="text-sm text-muted-foreground">
-              Showing {products.length} product
-              {products.length !== 1 ? "s" : ""}
-            </p>
-            <div className="flex items-center space-x-2">
-              <Label htmlFor="sort-by" className="whitespace-nowrap">
-                Sort by:
-              </Label>
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger id="sort-by" className="w-40">
-                  <SelectValue placeholder="Featured" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="featured">Featured</SelectItem>
-                  <SelectItem value="priceAsc">Price: Low to High</SelectItem>
-                  <SelectItem value="priceDesc">Price: High to Low</SelectItem>
-                  <SelectItem value="rating">Top Rated</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          {products.length > 0 ? (
-            <div className="grid px-2 md:px-0 grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {products.map((product) => (
-                <ShopProdCard product={product} key={product.id} />
-              ))}
+          {isLoading ? (
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
+              {Array(6)
+                .fill(0)
+                .map((_, index) => (
+                  <div key={index} className="relative">
+                    <Skeleton className="w-full h-52 rounded-md" />
+                  </div>
+                ))}
             </div>
           ) : (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground">
-                No products found matching your filters.
-              </p>
-              <Button variant="link" onClick={resetFilters} className="mt-2">
-                Reset all filters
-              </Button>
-            </div>
+            <>
+              <div className="flex justify-between items-center mb-4">
+                <p className="text-sm text-gray-600">
+                  Showing {filteredProducts.length} product
+                  {filteredProducts.length !== 1 && "s"}
+                </p>
+
+                <div className="text-sm flex flex-wrap gap-2">
+                  {appliedFilters.categoryFilter !== "all" && (
+                    <span className="bg-gray-100 px-2 py-1 rounded">
+                      Category:{" "}
+                      {categories?.find(
+                        (c) => c.id === appliedFilters.categoryFilter
+                      )?.name || appliedFilters.categoryFilter}
+                    </span>
+                  )}
+                  {appliedFilters.searchQuery && (
+                    <span className="bg-gray-100 px-2 py-1 rounded">
+                      Search: "{appliedFilters.searchQuery}"
+                    </span>
+                  )}
+                  {(appliedFilters.priceRange[0] > 0 ||
+                    appliedFilters.priceRange[1] < 500) && (
+                    <span className="bg-gray-100 px-2 py-1 rounded">
+                      Price: ${appliedFilters.priceRange[0]} - $
+                      {appliedFilters.priceRange[1]}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {filteredProducts.length > 0 ? (
+                <>
+                  <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
+                    {filteredProducts.map((product) => (
+                      <ShopProdCard key={product.id} product={product} />
+                    ))}
+                  </div>
+
+                  <div className="mt-6">
+                    <PaginationDemo
+                      page={currentPage}
+                      totalPages={totalPages}
+                      onPageChange={handlePageChange}
+                    />
+                  </div>
+                </>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-60">
+                  <Frown className="w-12 h-12 text-gray-500" />
+                  <p className="mt-2 text-lg font-semibold text-gray-600">
+                    No products found.
+                  </p>
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>

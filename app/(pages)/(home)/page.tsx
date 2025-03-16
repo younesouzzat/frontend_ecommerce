@@ -1,20 +1,26 @@
 "use client";
 
 import { useGetProductsWithCategoryQuery } from "@/redux/services/client/products";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useState, ReactNode } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Product, Category } from "@/types";
 
 // Component imports 
-import { BrandCarousel } from "./brands";
-import FeaturedProduct from "./FeaturedProduct";
-import FirstBanner from "./FirstBanner";
-import HomeSlider from "./HomeSlider";
-import HotSells from "./HotSells";
-import RecentProduct from "./RecentProduct";
-import ThreeBanners from "./ThreeBanners";
+import { BrandCarousel } from "../../components/client/home/brands";
+import FeaturedProduct from "../../components/client/home/sections/FeaturedProduct";
+import FirstBanner from "../../components/client/home/sections/FirstBanner";
+import HomeSlider from "../../components/client/home/sections/HomeSlider";
+import HotSells from "../../components/client/home/sections/HotSells";
+import RecentProduct from "../../components/client/home/sections/RecentProduct";
+import ThreeBanners from "../../components/client/home/sections/ThreeBanners";
 
-const ErrorFallback = ({ error, resetErrorBoundary }) => (
+interface ErrorFallbackProps {
+  error: Error;
+  resetErrorBoundary: () => void;
+}
+
+const ErrorFallback: React.FC<ErrorFallbackProps> = ({ error, resetErrorBoundary }) => (
   <div className="text-center py-10 mx-auto max-w-md">
     <h2 className="text-xl font-bold text-red-600 mb-2">Something went wrong</h2>
     <p className="text-gray-600 mb-4">{error.message || "Failed to load content"}</p>
@@ -27,7 +33,7 @@ const ErrorFallback = ({ error, resetErrorBoundary }) => (
   </div>
 );
 
-const SectionSkeleton = () => (
+const SectionSkeleton: React.FC = () => (
   <div className="container mx-auto py-8">
     <Skeleton className="h-8 w-48 mb-6" />
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -45,7 +51,12 @@ const SectionSkeleton = () => (
   </div>
 );
 
-const SectionWrapper = ({ children, name }) => (
+interface SectionWrapperProps {
+  children: ReactNode;
+  name: string;
+}
+
+const SectionWrapper: React.FC<SectionWrapperProps> = ({ children, name }) => (
   <ErrorBoundary 
     FallbackComponent={ErrorFallback} 
     onReset={() => window.location.reload()}
@@ -57,6 +68,11 @@ const SectionWrapper = ({ children, name }) => (
   </ErrorBoundary>
 );
 
+interface ApiResponse {
+  products: Product[];
+  categories: Category[];
+}
+
 export default function Home() {
   const {
     data: responseData,
@@ -64,15 +80,15 @@ export default function Home() {
     isError,
     error,
     refetch
-  } = useGetProductsWithCategoryQuery();
- 
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
+  } = useGetProductsWithCategoryQuery<ApiResponse>();
+
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
 
   useEffect(() => {
     if (responseData) {
-      setProducts(responseData?.products || []);
-      setCategories(responseData?.categories || []);
+      setProducts(responseData.products || []);
+      setCategories(responseData.categories || []);
     }
   }, [responseData]);
 
@@ -114,7 +130,7 @@ export default function Home() {
 
       <SectionWrapper name="featuredProduct">
         <FeaturedProduct 
-          products={products?.filter(p => p.is_promotion) || []} 
+          products={products.filter((p) => p.is_promotion) || []} 
           isLoading={isLoading} 
         />
       </SectionWrapper>
@@ -125,7 +141,7 @@ export default function Home() {
 
       <SectionWrapper name="hotSells">
         <HotSells 
-          products={products?.filter(p => p.isHotSell) || []}
+          products={products.filter((p) => p.is_promotion) || []}
           isLoading={isLoading}
         />
       </SectionWrapper>

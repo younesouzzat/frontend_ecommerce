@@ -7,8 +7,6 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
   CarouselApi,
 } from "@/components/ui/carousel";
 import { slider1, slider2, slider3 } from "@/utils/assets";

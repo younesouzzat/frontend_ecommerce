@@ -52,7 +52,7 @@ export default function RootLayout({
                   enableSystem
                   disableTransitionOnChange
                 >
-                  {/* <PageLoader /> */}
+                  <PageLoader />
                   {children}
                   <Toaster />
                 </ThemeProvider>

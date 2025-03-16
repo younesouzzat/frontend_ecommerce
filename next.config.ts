@@ -20,6 +20,7 @@ const nextConfig: NextConfig = {
     return config;
   },
   images: {
+    domains: ["127.0.0.1"],
     remotePatterns: [
       {
         protocol: "http",

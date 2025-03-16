@@ -9,6 +9,8 @@ import { adminProductsApi } from "../services/admin/products";
 // Import the global slice
 import globalReducer from "../services/shop/globalSlice";
 import { clientProductsApi } from "../services/client/products";
+import { clientCategoriesApi } from "../services/client/categories";
+import { clientOrdersApi } from "../services/client/orders";
 
 export const store = configureStore({
     reducer: {
@@ -19,6 +21,8 @@ export const store = configureStore({
         [adminCategoriesApi.reducerPath]: adminCategoriesApi.reducer,
         [adminProductsApi.reducerPath]: adminProductsApi.reducer,
         [clientProductsApi.reducerPath]: clientProductsApi.reducer,
+        [clientCategoriesApi.reducerPath]: clientCategoriesApi.reducer,
+        [clientOrdersApi.reducerPath]: clientOrdersApi.reducer,
         global: globalReducer,
     },
     middleware: (getDefaultMiddleware) =>
@@ -30,6 +34,8 @@ export const store = configureStore({
         .concat(adminCategoriesApi.middleware)
         .concat(adminProductsApi.middleware)
         .concat(clientProductsApi.middleware)
+        .concat(clientCategoriesApi.middleware)
+        .concat(clientOrdersApi.middleware)
 });
 
 export type RootState = ReturnType<typeof store.getState>;

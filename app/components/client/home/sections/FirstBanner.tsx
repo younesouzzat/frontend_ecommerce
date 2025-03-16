@@ -9,6 +9,7 @@ import {
   Undo2,
 } from "lucide-react";
 import TabNavigation from "./TabNavigation";
+import { TabNavigationProps } from "@/types";
 
 const features = [
   {
@@ -38,7 +39,7 @@ const features = [
   },
 ];
 
-const FirstBanner = ({ categories, products, isLoading }) => {
+const FirstBanner: React.FC<TabNavigationProps> = ({ categories, products, isLoading }) => {
   return (
     <div className="secondary-container flex flex-col md:flex-row gap-y-2 md:space-x-2">
       <div className="flex w-full md:w-1/6">

@@ -5,22 +5,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import { Progress } from "@/components/ui/prod-progress";
 import PromotionSkeleton from "@/app/components/skeletons/PromotionSkeleton";
+import Link from "next/link";
+import { routes } from "@/utils/routes";
+import { SingleItem } from "@/types";
 
-interface Item {
-  image: string;
-  title: string;
-  price: number;
-  is_promotion?: boolean;
-  price_special?: number;
-  created_at: string;
-}
-
-interface CardProdProps {
-  item: Item;
-  isLoading: boolean;
-}
-
-const CardProd: React.FC<CardProdProps> = ({ item, isLoading }) => {
+const CardProd: React.FC<SingleItem> = ({ item, isLoading }) => {
   return (
     <div>
       <Card className="shadow-none border-none">
@@ -28,7 +17,7 @@ const CardProd: React.FC<CardProdProps> = ({ item, isLoading }) => {
           {isLoading ? (
             <PromotionSkeleton />
           ) : (
-            <>
+            <Link href={routes.product(item.id)}>
               <Image
                 src={item.image}
                 alt="product"
@@ -74,7 +63,7 @@ const CardProd: React.FC<CardProdProps> = ({ item, isLoading }) => {
                 </h3>
                 <CountdownTimer targetDate={item.created_at} />
               </div>
-            </>
+            </Link>
           )}
         </CardContent>
       </Card>

@@ -1,11 +1,18 @@
 "use client";
 import FirstSkeleton from "@/app/components/skeletons/FirstSkeleton";
+import { TabNavigationProps } from "@/types";
+import { routes } from "@/utils/routes";
 import Image from "next/image";
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import React from "react";
 
-const TabNavigation = ({ categories = [], products = [], isLoading }) => {
-  const [activeTab, setActiveTab] = useState(null);
+const TabNavigation: React.FC<TabNavigationProps> = ({
+  categories,
+  products,
+  isLoading,
+}) => {
+  const [activeTab, setActiveTab] = useState<number | null>(null);
 
   useEffect(() => {
     if (categories.length > 0) {
@@ -13,11 +20,10 @@ const TabNavigation = ({ categories = [], products = [], isLoading }) => {
     }
   }, [categories]);
 
-  const handleTabChange = (tabId) => {
+  const handleTabChange = (tabId: number) => {
     setActiveTab(tabId);
   };
 
-  // Filter products based on active category
   const filteredProducts = products.filter(
     (product) => product.category_id === activeTab
   );
@@ -67,24 +73,28 @@ const TabNavigation = ({ categories = [], products = [], isLoading }) => {
                   key={index}
                   className="w-full md:w-1/6 flex flex-col justify-center items-center space-y-2"
                 >
-                  <Image
-                    src={item.image}
-                    alt={`product ${index}`}
-                    width={125}
-                    height={125}
-                    className="w-32 h-32 object-cover"
-                  />
-                  <strong className="font-medium">{item.title}</strong>
-                  <div className="flex items-center space-x-2">
-                    <span className="font-semibold text-secondarybackground">
-                      ${item.price.toFixed(2)}
-                    </span>
-                    {item.is_promotion && item.price_special > 0 && (
-                      <span className="text-gray-400 line-through text-sm">
-                        ${item.price_special.toFixed(2)}
+                  <Link href={routes.product(item.id)}>
+                    <Image
+                      src={item.image}
+                      alt={`product ${index}`}
+                      width={125}
+                      height={125}
+                      className="w-32 h-32 object-cover"
+                    />
+                    <strong className="font-medium">{item.title}</strong>
+                    <div className="flex items-center space-x-2">
+                      <span className="font-semibold text-secondarybackground">
+                        ${item.price.toFixed(2)}
                       </span>
-                    )}
-                  </div>
+                      {item.is_promotion &&
+                        item.price_special !== undefined &&
+                        item.price_special > 0 && (
+                          <span className="text-gray-400 line-through text-sm">
+                            ${item.price_special.toFixed(2)}
+                          </span>
+                        )}
+                    </div>
+                  </Link>
                 </div>
               ))}
             </>

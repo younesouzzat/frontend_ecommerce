@@ -1,6 +1,10 @@
 export const routes = {
   home: "/",
   shop: "/shop",
+  wishlist: "/wishlist",
+  checkout: "/checkout",
+  orderComplete: "/order-complete",
+  product: (id: string | number) => `/product/${id}`,
   login: "/login",
   signup: "/signup",
   requestpwd: "/request-password",

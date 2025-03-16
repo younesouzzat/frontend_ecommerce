@@ -204,7 +204,6 @@ const EditUserPage = () => {
                         placeholder="Select roles"
                         maxCount={3}
                         onValueChange={(selected) => {
-                          console.log(selected);
                           setValue("roles", selected, { shouldValidate: true });
                           setRoleNames(selected);
                         }}

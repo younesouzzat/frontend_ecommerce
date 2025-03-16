@@ -26,7 +26,7 @@ const Items = [
   },
 ];
 
-export default function HotSells() {
+export default function HotSells({ products, isLoading }) {
   const { theme } = useTheme();
 
   return (
@@ -67,7 +67,7 @@ export default function HotSells() {
       </div>
 
       <div className="flex w-full md:w-4/6">
-        <FourthTabNavigation />
+        <FourthTabNavigation products={products} isLoading={isLoading} />
       </div>
     </div>
   );

@@ -1,12 +1,13 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function ImageProdSkeleton({ index }) {
+interface ImageProdSkeletonProps {
+  index: number;
+}
+
+export default function ImageProdSkeleton({ index }: ImageProdSkeletonProps) {
   return (
-    <div
-      key={index}
-      className="flex aspect-square items-center justify-center p-6"
-    >
-      <Skeleton className="h-[125px] w-[125px] rounded-xl" />
+    <div className="w-full shadow-none cursor-pointer border-none hover:shadow-lg transition-shadow">
+      <Skeleton className="relative flex flex-col items-center text-center group" />
     </div>
   );
 }

@@ -22,58 +22,60 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Eye, Heart, BarChart2, ShoppingCart } from "lucide-react";
+import { Eye, Heart, ArrowRightLeft, ShoppingCart } from "lucide-react";
 import Image from "next/image";
-import { Badge } from "@/components/ui/badge";
 import toast from "react-hot-toast";
 import { useCartSheet } from "@/app/context/CartSheetContext";
+import Link from "next/link";
+import { routes } from "@/utils/routes";
+import { Product } from "@/types";
+import { RootState } from "@/redux/stores/store";
 
-export default function ShopProdCard({ product }) {
+interface ShopProdCardProps {
+  product: Product;
+}
+
+export default function ShopProdCard({ product }: ShopProdCardProps) {
   const dispatch = useDispatch();
   const { openSheet } = useCartSheet();
-  const { wishlist, compareList, cartItems } = useSelector(
-    (state) => state.global
+  const { wishlist, compareList } = useSelector(
+    (state: RootState) => state.global
   );
 
-  useEffect(() => {
-    const storedWishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
-    const storedCompareList = JSON.parse(
-      localStorage.getItem("compareList") || "[]"
-    );
-    const storedCartItems = JSON.parse(
-      localStorage.getItem("cartItems") || "[]"
-    );
-    storedWishlist.forEach((id) => dispatch(toggleWishlist(id)));
-    storedCompareList.forEach((id) => dispatch(toggleCompare(id)));
-    storedCartItems.forEach((item) => dispatch(addToCart(item)));
-  }, [dispatch]);
-
-  const handleQuickView = (product) => {
+  const handleQuickView = (product: Product) => {
     dispatch(setQuickView(product));
   };
 
-  const handleWishlist = (productId) => {
-    dispatch(toggleWishlist(productId));
-    localStorage.setItem("wishlist", JSON.stringify(wishlist)); // Persist wishlist
+  const handleWishlist = (product: number) => {
+    dispatch(toggleWishlist(product));
+    const isAdding = !wishlist.some((item) => item.id === product.id);
+    toast.success(
+      isAdding ? "Added to your wishlist" : "Removed from your wishlist"
+    );
   };
 
-  const handleCompare = (product) => {
+  const handleCompare = (product: Product) => {
     dispatch(toggleCompare(product));
-    localStorage.setItem("compareList", JSON.stringify(compareList)); // Persist compare list
+    const isAdding = !compareList.some((item) => item.id === product.id);
+    toast.success(
+      isAdding ? "Added to comparison list" : "Removed from comparison list"
+    );
   };
 
-  const handleAddToCart = (product) => {
-    dispatch(addToCart(product));
-    localStorage.setItem("cartItems", JSON.stringify(cartItems)); // Persist cart items
+  const handleAddToCart = (product: Product) => {
+    dispatch(addToCart({ product }));
     toast.success("Product added to cart!");
     openSheet("cart");
   };
+
+  const isInCompare = compareList.some((item) => item.id === product.id);
+  const isInWishlist = wishlist.some((item) => item.id === product.id);
 
   return (
     <div>
       <Card key={product.id} className="overflow-hidden group relative">
         {/* Quick action buttons */}
-        <div className="absolute top-2 right-2 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="absolute top-2 right-2 z-30 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -99,23 +101,19 @@ export default function ShopProdCard({ product }) {
                   variant="secondary"
                   size="icon"
                   className={`rounded-full bg-white bg-opacity-80 hover:bg-opacity-100 ${
-                    wishlist.includes(product.id) ? "text-red-500" : ""
+                    isInWishlist ? "text-red-500" : ""
                   }`}
-                  onClick={() => handleWishlist(product.id)}
+                  onClick={() => handleWishlist(product)}
                 >
                   <Heart
                     size={16}
-                    fill={
-                      wishlist.includes(product.id) ? "currentColor" : "none"
-                    }
+                    fill={isInWishlist ? "currentColor" : "none"}
                   />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
                 <p>
-                  {wishlist.includes(product.id)
-                    ? "Remove from Wishlist"
-                    : "Add to Wishlist"}
+                  {isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
                 </p>
               </TooltipContent>
             </Tooltip>
@@ -128,11 +126,11 @@ export default function ShopProdCard({ product }) {
                   variant="secondary"
                   size="icon"
                   className={`rounded-full bg-white bg-opacity-80 hover:bg-opacity-100 ${
-                    compareList.includes(product.id) ? "text-blue-500" : ""
+                    isInCompare ? "text-blue-500" : ""
                   }`}
                   onClick={() => handleCompare(product)}
                 >
-                  <BarChart2 size={16} />
+                  <ArrowRightLeft size={16} />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
@@ -147,38 +145,45 @@ export default function ShopProdCard({ product }) {
         </div>
 
         <div className="relative w-full aspect-square overflow-hidden">
-          <Image
-            src={product.src}
-            alt={product.label}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
-          />
+          <Link href={routes.product(product.id)}>
+            <Image
+              src={product.image}
+              alt={product.title}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
+            />
+          </Link>
         </div>
         <CardHeader>
-          <CardTitle className="text-lg">{product.label}</CardTitle>
-          <div className="flex items-center text-sm space-x-1">
+          <CardTitle className="text-lg">
+            <Link href={routes.product(product.id)}>{product.title}</Link>
+          </CardTitle>
+
+          <div className="flex items-center text-sm space-x-2">
             <span className="text-yellow-500">★</span>
-            <span>{product.rating} (0)</span>
+            <span>
+              {product.reviews_avg_note
+                ? Number(product.reviews_avg_note).toFixed(1)
+                : 0}
+              ({product.reviews_count})
+            </span>
           </div>
         </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-1 mb-2">
-            {product.tags.map((tag) => (
-              <Badge key={tag} variant="secondary">
-                {tag}
-              </Badge>
-            ))}
-          </div>
-        </CardContent>
         <CardFooter className="flex flex-col gap-2 items-center">
           <div className="flex gap-1">
-            <span className="font-semibold text-secondarybackground">
-              ${product.price.toFixed(2)}
-            </span>
-            {product.has_promo && product.old_price > 0 && (
-              <span className="text-gray-400 line-through">
-                ${product.old_price.toFixed(2)}
+            {product.is_promotion ? (
+              <>
+                <span className="font-semibold text-secondarybackground">
+                  ${product.price_special.toFixed(2)}
+                </span>
+                <span className="text-gray-400 line-through">
+                  ${product.price.toFixed(2)}
+                </span>
+              </>
+            ) : (
+              <span className="font-semibold text-secondarybackground">
+                ${product.price.toFixed(2)}
               </span>
             )}
           </div>

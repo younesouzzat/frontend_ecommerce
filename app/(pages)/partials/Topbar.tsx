@@ -43,7 +43,7 @@ export default function Topbar({ socialItems }: TopbarProps) {
           </div>
 
           <div className="left flex flex items-center gap-6">
-            <span className="text-xs font-medium">Follwo us</span>
+            <span className="text-xs font-medium">Follow us</span>
             <ul className="flex items-center gap-3">
               {socialItems.map((item, index) => (
                 <li key={index}>

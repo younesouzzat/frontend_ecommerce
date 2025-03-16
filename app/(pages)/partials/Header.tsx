@@ -2,8 +2,7 @@ import { logo } from "@/utils/assets";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import HeartIconWithBadge from "./smallIcons/HeartIconWithBadge";
-import BasketIconWithBadge from "./smallIcons/BasketIconWithBadge";
+import HeartIconWithBadge from "./smallIcons/HeartIconWithBadge"; 
 import { ThemeToggle } from "@/components/ThemeToggle";
 import {
   Sheet,
@@ -15,7 +14,7 @@ import {
 } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import ShopCartSheet from "../shop/ShopCartSheet";
+import ShopCartSheet from "@/app/components/client/shop/ShopCartSheet";
 import { routes } from "@/utils/routes";
 
 interface NavItems {
@@ -70,7 +69,7 @@ export default function Header() {
 
       <div className="w-1/3 md:w-1/4">
         <div className="flex items-center justify-end gap-4">
-          <Link href="#">
+          <Link href={routes.wishlist}>
             <HeartIconWithBadge />
           </Link>
 

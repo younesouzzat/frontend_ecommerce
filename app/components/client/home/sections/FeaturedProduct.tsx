@@ -1,25 +1,13 @@
 "use client";
-import { prod7, prod8 } from "@/utils/assets";
 import React, { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import SecondTabNavigation from "./SecondTabNavigation";
-import { SingleProductCarousel } from "./SingleProductCarousel";
+import { FeaturedProductProps, Product } from "@/types";
+
 import { type CarouselApi } from "@/components/ui/carousel";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-
-interface Product {
-  image: string;
-  title: string;
-  price: number;
-  is_promotion?: boolean;
-  price_special?: number;
-}
-
-interface FeaturedProductProps {
-  products: Product[];
-  isLoading: boolean;
-}
+import SingleProductCarousel from "./SingleProductCarousel";
 
 const FeaturedProduct: React.FC<FeaturedProductProps> = ({
   products,

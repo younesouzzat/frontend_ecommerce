@@ -19,18 +19,15 @@ export const CartSheetProvider = ({ children }: { children: ReactNode }) => {
   });
 
   const openSheet = (sheet: SheetType) => {
-    console.log(`Opening sheet: ${sheet}`); // Debug log
     setOpenSheets((prev) => ({ ...prev, [sheet]: true }));
   };
 
   const closeSheet = (sheet: SheetType) => {
-    console.log(`Closing sheet: ${sheet}`); // Debug log
     setOpenSheets((prev) => ({ ...prev, [sheet]: false }));
   };
 
   const isSheetOpen = (sheet: SheetType) => {
     const isOpen = openSheets[sheet];
-    console.log(`Checking if sheet ${sheet} is open: ${isOpen}`); // Debug log
     return isOpen;
   };
 

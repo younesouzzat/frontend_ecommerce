@@ -8,6 +8,8 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import ImageProdSkeleton from "@/app/components/skeletons/ImageProdSkeleton";
+import Link from "next/link";
+import { routes } from "@/utils/routes";
 
 interface Product {
   image: string;
@@ -54,17 +56,19 @@ const RecentProduct: React.FC<RecentProductProps> = ({
                         className="md:basis-1/6 lg:basis-1/6 cursor-pointer"
                       >
                         <div className="p-1">
-                          <Card className="border-0 shadow-none">
-                            <CardContent className="flex aspect-square items-center justify-center p-6">
-                              <Image
-                                src={item.image}
-                                alt={`product ${index}`}
-                                width={185}
-                                height={185}
-                                className="w-40 h-40 object-cover"
-                              />
-                            </CardContent>
-                          </Card>
+                          <Link href={routes.product(item.id)}>
+                            <Card className="border-0 shadow-none">
+                              <CardContent className="flex aspect-square items-center justify-center p-6">
+                                <Image
+                                  src={item.image}
+                                  alt={`product ${index}`}
+                                  width={185}
+                                  height={185}
+                                  className="w-40 h-40 object-cover"
+                                />
+                              </CardContent>
+                            </Card>
+                          </Link>
                         </div>
                       </CarouselItem>
                     ))}

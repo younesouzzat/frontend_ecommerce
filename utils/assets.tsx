@@ -26,6 +26,10 @@ import { default as Brand4Logo } from "@/public/assets/images/brands/icons/Etsy.
 import { default as Brand5Logo } from "@/public/assets/images/brands/icons/Walmart.svg";
 import { default as Brand6Logo } from "@/public/assets/images/brands/icons/AliExpress.svg";
 
+// About us
+import about_1 from "@/public/assets/images/banners/about_us_img_11.png";
+import about_2 from "@/public/assets/images/banners/about_us_img_21.png";
+
 export {
   logo,
   slider1,
@@ -50,4 +54,6 @@ export {
   Brand4Logo,
   Brand5Logo,
   Brand6Logo,
+  about_1,
+  about_2,
 };

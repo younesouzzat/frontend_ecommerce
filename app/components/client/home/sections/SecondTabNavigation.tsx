@@ -4,8 +4,11 @@ import ImageProdSkeleton from "@/app/components/skeletons/ImageProdSkeleton";
 import { Card, CardContent } from "@/components/ui/card";
 import { HeartIcon, StarIcon } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import React from "react";
+import { Product, TabNavigationProps } from "@/types";
+import { routes } from "@/utils/routes";
+import Link from "next/link";
 
 const tabs = [
   { id: "onsale", label: "On Sale" },
@@ -14,32 +17,23 @@ const tabs = [
   { id: "bestsale", label: "Best Sale" },
 ];
 
-// Interface for product data
-interface Product {
-  image: string;
-  title: string;
-  price: number;
-  is_promotion?: boolean;
-  price_special?: number;
-}
-
-interface SecondTabNavigationProps {
-  products: Product[];
-  isLoading: boolean;
-}
-
 // Function to get random items
 const getRandomItems = (products: Product[], num: number) =>
   [...products].sort(() => Math.random() - 0.5).slice(0, num);
 
-const SecondTabNavigation: React.FC<SecondTabNavigationProps> = ({
+const SecondTabNavigation: React.FC<TabNavigationProps> = ({
   products,
   isLoading,
 }) => {
   const [activeTab, setActiveTab] = useState(tabs[0].id);
-  const [randomizedItems, setRandomizedItems] = useState(() =>
-    getRandomItems(products, 6)
-  );
+  
+  const [randomizedItems, setRandomizedItems] = useState<Product[]>([]);
+
+  useEffect(() => {
+    if (products.length > 0) {
+      setRandomizedItems(getRandomItems(products, 6));
+    }
+  }, [products]);
 
   const handleTabChange = (tabId: string) => {
     setActiveTab(tabId);
@@ -82,6 +76,7 @@ const SecondTabNavigation: React.FC<SecondTabNavigationProps> = ({
                 <ImageProdSkeleton index={index} key={index} />
               ))
             : randomizedItems.map((item, index) => (
+              <Link href={routes.product(item.id)}>
                 <Card
                   key={index}
                   className="w-full shadow-none cursor-pointer border-none hover:shadow-lg transition-shadow"
@@ -141,6 +136,7 @@ const SecondTabNavigation: React.FC<SecondTabNavigationProps> = ({
                     </div>
                   </CardContent>
                 </Card>
+              </Link>
               ))}
         </div>
       </div>

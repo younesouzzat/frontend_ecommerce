@@ -22,7 +22,6 @@ export function middleware(req: NextRequest) {
 
   // if (isAuthPage && token) {
   //   // return NextResponse.redirect(new URL("/dashboard", req.url));
-  //   console.log(role);
   //   if (role === 'admin') {
   //     return NextResponse.redirect(new URL("/dashboard", req.url));
   //   } else if (role === 'user') {
