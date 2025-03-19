@@ -22,7 +22,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { MESSAGES } from "@/constants/messages";
-import { useDeleteProductMutation } from "@/redux/services/admin/products";
+import { useDeleteOrderMutation } from "@/redux/services/admin/orders";
 import { routes } from "@/utils/routes";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
@@ -30,7 +30,7 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 
-export type Product = {
+export type Order = {
   id: string;
   cover: string;
   name: string;
@@ -38,63 +38,44 @@ export type Product = {
   statut: string;
 };
 
-export const columns = (refetch: () => void): ColumnDef<Product>[] => [
+export const columns = (refetch: () => void): ColumnDef<Order>[] => [
   {
-    accessorKey: "image",
-    header: "Cover",
+    accessorKey: "code",
+    header: "Code",
     cell: ({ row }) => {
-      return (
-        <div className="capitalize">
-          <Avatar>
-            <AvatarImage src={row.getValue("image")} alt="cover" />
-          </Avatar>
-        </div>
-      );
+      return <div className="capitalize">{row.getValue("code")}</div>;
     },
-  },  
+  },
   {
-    accessorKey: "title",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Title
-          <ArrowUpDown />
-        </Button>
-      );
-    },
+    accessorKey: "payment_mode",
+    header: "Payment Mode",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("title")}</div>
+      <Badge
+        className="capitalize"
+        variant={
+          row.getValue("payment_mode") === "On Site" ? "secondary" : "success"
+        }
+      >
+        {row.getValue("payment_mode")}
+      </Badge>
     ),
   },
   {
-    accessorKey: "category",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Category
-          <ArrowUpDown />
-        </Button>
-      );
-    },
+    accessorKey: "delivery_mode",
+    header: "Delivery coast",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("category")}</div>
+      <div className="capitalize">{row.getValue("delivery_mode")} $</div>
     ),
   },
   {
-    accessorKey: "statut",
+    accessorKey: "status",
     header: "Status",
     cell: ({ row }) => (
       <Badge
         className="capitalize"
-        variant={row.getValue("statut") ? "success" : "destructive"}
+        variant={row.getValue("status") == 1 ? "success" : "destructive"}
       >
-        {row.getValue("statut") ? "active" : "inactive"}
+        {row.getValue("status") == 1 ? "Delivered" : "In Progress"}
       </Badge>
     ),
   },
@@ -102,14 +83,14 @@ export const columns = (refetch: () => void): ColumnDef<Product>[] => [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const product = row.original;
+      const order = row.original;
       const router = useRouter();
-      const [deleteProduct, { isLoading }] = useDeleteProductMutation();
+      const [deleteOrder, { isLoading }] = useDeleteOrderMutation();
 
       const handleDelete = async (id: string, rowIndex: number) => {
         const loadingToast = toast.loading(MESSAGES.OPERATION.DELETE);
         try {
-          const response = await deleteProduct({ id }).unwrap();
+          const response = await deleteOrder({ id }).unwrap();
           toast.dismiss(loadingToast);
 
           if (response.success) {
@@ -141,7 +122,7 @@ export const columns = (refetch: () => void): ColumnDef<Product>[] => [
             <DropdownMenuLabel>{MESSAGES.COLULMN.ACTIONS}</DropdownMenuLabel>
             <DropdownMenuItem
               className="cursor-pointer"
-              onClick={() => router.push(routes.adminUpdateProduct(product.id))}
+              onClick={() => router.push(routes.adminUpdateOrder(order.id))}
             >
               {MESSAGES.BUTTONS.EDIT}
             </DropdownMenuItem>
@@ -170,7 +151,7 @@ export const columns = (refetch: () => void): ColumnDef<Product>[] => [
                       {MESSAGES.BUTTONS.CANCEL}
                     </AlertDialogCancel>
                     <AlertDialogAction
-                      onClick={() => handleDelete(product.id, row.index)}
+                      onClick={() => handleDelete(order.id, row.index)}
                       disabled={isLoading}
                     >
                       {isLoading

@@ -56,10 +56,7 @@ export default function CheckoutPage() {
     0
   );
 
-  const taxRate = 0.1;
-  const tax = subtotal * taxRate;
-
-  const total = subtotal + tax;
+  const total = subtotal;
 
   const form = useForm<FormData>({
     defaultValues: {
@@ -79,7 +76,6 @@ export default function CheckoutPage() {
       orderItems: cartItems,
       orderSummary: {
         subtotal,
-        tax,
         total,
         deliveryFee: formData.delivery_option
           ? Number(formData.delivery_option)
@@ -292,19 +288,19 @@ export default function CheckoutPage() {
                             <div className="flex items-center space-x-2">
                               <RadioGroupItem value="0" id="self-pickup" />
                               <Label htmlFor="self-pickup">
-                                Self pickup - 0.00 MAD
+                                Self pickup - 0.00 $
                               </Label>
                             </div>
                             <div className="flex items-center space-x-2">
                               <RadioGroupItem value="20" id="casablanca" />
                               <Label htmlFor="casablanca">
-                                Casablanca - from 20.00 MAD
+                                Casablanca - from 20.00 $
                               </Label>
                             </div>
                             <div className="flex items-center space-x-2">
                               <RadioGroupItem value="30" id="other-city" />
                               <Label htmlFor="other-city">
-                                Other city - from 30.00 MAD
+                                Other city - from 30.00 $
                               </Label>
                             </div>
                           </RadioGroup>
@@ -371,10 +367,6 @@ export default function CheckoutPage() {
                         <span className="text-gray-600">
                           ${subtotal.toFixed(2)}
                         </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="font-semibold">Tax (10%)</span>
-                        <span className="text-gray-600">${tax.toFixed(2)}</span>
                       </div>
                       <div className="flex justify-between mt-2">
                         <span className="font-semibold text-lg">Total</span>

@@ -77,16 +77,28 @@ const globalSlice = createSlice({
     setQuickView: (state, action: PayloadAction<Product | null>) => {
       state.quickViewProduct = action.payload;
     },
+    // addToCart(state, action: PayloadAction<{ product: Product; quantity?: number }>) {
+    //   const { product, quantity = 1 } = action.payload;
+    //   console.log(product);
+    //   const existingItem = state.cartItems.find((item) => item.id === product.id);
+    
+    //   if (existingItem) {
+    //     existingItem.quantity += quantity;
+    //   } else {
+    //     state.cartItems.push({ ...product, quantity });
+    //   }
+    
+    //   localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
+    // },    
     addToCart(state, action: PayloadAction<{ product: Product; quantity?: number }>) {
       const { product, quantity = 1 } = action.payload;
+      const price = product.is_promotion ? product.price_special : product.price;
       const existingItem = state.cartItems.find((item) => item.id === product.id);
-    
       if (existingItem) {
         existingItem.quantity += quantity;
       } else {
-        state.cartItems.push({ ...product, quantity });
+        state.cartItems.push({ ...product, quantity, price });
       }
-    
       localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
     },    
     updateQuantity(

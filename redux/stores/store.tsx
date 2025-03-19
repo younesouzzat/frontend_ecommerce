@@ -5,6 +5,7 @@ import { adminRolesApi } from "../services/admin/roles";
 import { adminPermissionsApi } from "../services/admin/permissions";
 import { adminCategoriesApi } from "../services/admin/categories";
 import { adminProductsApi } from "../services/admin/products";
+import { adminOrdersApi } from "../services/admin/orders";
 
 // Import the global slice
 import globalReducer from "../services/shop/globalSlice";
@@ -20,6 +21,7 @@ export const store = configureStore({
         [adminPermissionsApi.reducerPath]: adminPermissionsApi.reducer,
         [adminCategoriesApi.reducerPath]: adminCategoriesApi.reducer,
         [adminProductsApi.reducerPath]: adminProductsApi.reducer,
+        [adminOrdersApi.reducerPath]: adminOrdersApi.reducer,
         [clientProductsApi.reducerPath]: clientProductsApi.reducer,
         [clientCategoriesApi.reducerPath]: clientCategoriesApi.reducer,
         [clientOrdersApi.reducerPath]: clientOrdersApi.reducer,
@@ -33,6 +35,7 @@ export const store = configureStore({
         .concat(adminPermissionsApi.middleware)
         .concat(adminCategoriesApi.middleware)
         .concat(adminProductsApi.middleware)
+        .concat(adminOrdersApi.middleware)
         .concat(clientProductsApi.middleware)
         .concat(clientCategoriesApi.middleware)
         .concat(clientOrdersApi.middleware)

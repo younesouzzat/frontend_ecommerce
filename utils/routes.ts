@@ -24,8 +24,9 @@ export const routes = {
     `/dashboard/categories/edit/${id}`,
   adminProducts: "/dashboard/products",
   adminCreateProduct: "/dashboard/products/create",
-  adminUpdateProduct: (id: string | number) =>
-    `/dashboard/products/edit/${id}`,
+  adminUpdateProduct: (id: string | number) => `/dashboard/products/edit/${id}`,
+  adminOrders: "/dashboard/orders",
+  adminUpdateOrder: (id: string | number) => `/dashboard/orders/edit/${id}`,
 } as const;
 
 export type RouteKey = keyof typeof routes;

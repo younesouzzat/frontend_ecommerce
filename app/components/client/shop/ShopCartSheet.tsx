@@ -42,10 +42,7 @@ export default function ShopCartSheet() {
     0
   );
 
-  const taxRate = 0.1;
-  const tax = subtotal * taxRate;
-
-  const total = subtotal + tax;
+  const total = subtotal;
 
   const handleQuantityChange = (id: number, quantity: number) => {
     if (quantity < 1 || isNaN(quantity)) return;
@@ -173,10 +170,6 @@ export default function ShopCartSheet() {
               <div className="flex justify-between">
                 <span className="font-semibold">Subtotal</span>
                 <span className="text-gray-600">${subtotal.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="font-semibold">Tax (10%)</span>
-                <span className="text-gray-600">${tax.toFixed(2)}</span>
               </div>
               <div className="flex justify-between mt-2">
                 <span className="font-semibold text-lg">Total</span>

@@ -260,7 +260,7 @@ const UpdateProductPage = () => {
             <div className="p-2 bg-primary/10 rounded-lg">
               <ShoppingCart className="w-5 h-5 text-primary" />
             </div>
-            <CardTitle className="text-primary">Create Product</CardTitle>
+            <CardTitle className="text-primary">Update Product</CardTitle>
           </div>
         </CardHeader>
 

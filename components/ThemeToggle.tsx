@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 
@@ -8,16 +8,13 @@ export function ThemeToggle() {
   const { setTheme, theme } = useTheme();
 
   return (
-    <Button
-      variant="default"
-      size="icon"
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-    >
-      {theme === "dark" ? (
-        <Sun className="size-8" />
-      ) : (
-        <Moon className="size-8" />
-      )}
-    </Button>
+    <div className="flex items-center space-x-2">
+      <Moon className="size-4" />
+      <Switch
+        checked={theme === "dark"}
+        onCheckedChange={() => setTheme(theme === "dark" ? "light" : "dark")}
+      />
+      <Sun className="size-4" />
+    </div>
   );
 }

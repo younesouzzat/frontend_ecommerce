@@ -76,9 +76,8 @@ const SecondTabNavigation: React.FC<TabNavigationProps> = ({
                 <ImageProdSkeleton index={index} key={index} />
               ))
             : randomizedItems.map((item, index) => (
-              <Link href={routes.product(item.id)}>
+              <Link href={routes.product(item.id)} key={index}>
                 <Card
-                  key={index}
                   className="w-full shadow-none cursor-pointer border-none hover:shadow-lg transition-shadow"
                 >
                   <CardContent className="relative flex flex-col items-center text-center group">
