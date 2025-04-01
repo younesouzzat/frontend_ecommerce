@@ -13,10 +13,15 @@ export const clientOrdersApi = createApi({
         method: "POST",
         body: credentials,
       }),
-    })
+    }),
+    getOrderById: builder.query<any, { userId: string; page: number; perPage: number }>({
+      query: ({ userId, page, perPage }) => `my-orders/${userId}?page=${page}&per_page=${perPage}`,
+      keepUnusedDataFor: 0,
+    }),
   }),
 });
 
 export const {
   useCreateOrderMutation,
+  useGetOrderByIdQuery,
 } = clientOrdersApi;

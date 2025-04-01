@@ -4,11 +4,7 @@ import {
   BadgeCheck,
   Bell,
   ChevronsUpDown,
-  CreditCard,
   LogOut,
-  Moon,
-  Sparkles,
-  Sun,
 } from "lucide-react";
 
 import { useRouter } from "next/navigation";
@@ -31,14 +27,14 @@ import {
 } from "@/components/ui/sidebar";
 import { useLogoutMutation } from "@/redux/services/auth";
 import { deleteCookie } from "cookies-next";
-import { Button } from "./ui/button";
-import { useTheme } from "next-themes";
 import { ThemeToggle } from "./ThemeToggle";
+import toast from "react-hot-toast";
 
 interface User {
   name: string;
   email: string;
   token: string;
+  displayname: string;
 }
 
 interface NavUserProps {
@@ -47,7 +43,6 @@ interface NavUserProps {
 
 export function NavUser({ user }: NavUserProps) {
   const { isMobile } = useSidebar();
-  const { setTheme } = useTheme()
   const router = useRouter();
   const [logout, { isLoading, isSuccess, isError }] = useLogoutMutation();
 
@@ -56,13 +51,15 @@ export function NavUser({ user }: NavUserProps) {
       const response = await logout({
         headers: { Authorization: `Bearer ${token}` },
       }).unwrap();
-
+  
       if (response.success) {
         deleteCookie("auth_data");
+        toast.success("Logged out successfully!");
         router.push("/login");
       }
     } catch (error) {
       console.error("Logout failed:", error);
+      toast.error("Logout failed. Please try again.");
     }
   };
 
@@ -76,12 +73,12 @@ export function NavUser({ user }: NavUserProps) {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={""} alt={user.name} />
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                <AvatarImage src={""} alt={user?.name} />
+                <AvatarFallback className="rounded-lg">{user?.displayname}</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{user.name}</span>
-                <span className="truncate text-xs">{user.email}</span>
+                <span className="truncate font-semibold">{user?.name}</span>
+                <span className="truncate text-xs">{user?.email}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -95,12 +92,12 @@ export function NavUser({ user }: NavUserProps) {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={""} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                  <AvatarImage src={""} alt={user?.name} />
+                  <AvatarFallback className="rounded-lg">{user?.displayname}</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{user.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
+                  <span className="truncate font-semibold">{user?.name}</span>
+                  <span className="truncate text-xs">{user?.email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
@@ -123,7 +120,7 @@ export function NavUser({ user }: NavUserProps) {
               className="cursor-pointer"
               disabled={isLoading}
               onClick={() => {
-                onLogout(user.token);
+                onLogout(user?.token);
               }}
             >
               <LogOut />

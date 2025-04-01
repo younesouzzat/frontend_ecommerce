@@ -161,10 +161,10 @@ const UpdateOrderPage = () => {
     const productTitle = item.products_info?.[0]?.titre || "Unknown Product";
     const quantity = item.qte || "N/A";
     const priceUnit = item.price_unit
-      ? `$${item.price_unit.toFixed(2)}`
+      ? `${item.price_unit.toFixed(2)}`
       : "N/A";
     const subtotal = item.price_unit
-      ? `$${(item.price_unit * item.qte).toFixed(2)}`
+      ? `${(item.price_unit * item.qte).toFixed(2)}`
       : "N/A";
 
     return (

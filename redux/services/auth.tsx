@@ -21,6 +21,12 @@ export const authApi = createApi({
         body: credentials,
       }),
     }),
+    socialite: builder.mutation({
+      query: (provider) => ({
+        url: `/auth/${provider}`,
+        method: "GET",
+      }),
+    }),
     requestpwd: builder.mutation({
       query: (credentials) => ({
         url: "request-password",
@@ -48,4 +54,12 @@ export const authApi = createApi({
   }),
 });
 
-export const { useLoginMutation, useSignupMutation, useRequestpwdMutation, useResetpwdMutation, useLogoutMutation, useGetUserQuery } = authApi;
+export const {
+  useLoginMutation,
+  useSignupMutation,
+  useSocialiteMutation,
+  useRequestpwdMutation,
+  useResetpwdMutation,
+  useLogoutMutation,
+  useGetUserQuery,
+} = authApi;

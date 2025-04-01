@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { routes } from "./utils/routes";
 
 export function middleware(req: NextRequest) {
   const authData = req.cookies.get("auth_data")?.value
@@ -10,16 +11,18 @@ export function middleware(req: NextRequest) {
   const roles: string[] = authData?.role || [];
   const currentPath = req.nextUrl.pathname;
 
-  const isDashboard = currentPath.startsWith("/dashboard");
+  const isDashboard = currentPath.startsWith(routes.dashboard);
+  const isAccount = currentPath.startsWith(routes.account);
   const allowedRoles = ["admin", "super_admin"];
 
-  if (isDashboard) {
+  if (isDashboard || isAccount) {
     if (!token) {
-      return NextResponse.redirect(new URL("/login", req.url));
+      return NextResponse.redirect(new URL(routes.home, req.url));
     }
-    if (!roles.some(role => allowedRoles.includes(role))) {
-      return NextResponse.redirect(new URL("/", req.url));
-    }
+  }
+
+  if (isDashboard && !roles.some(role => allowedRoles.includes(role))) {
+    return NextResponse.redirect(new URL(routes.home, req.url));
   }
 
   return NextResponse.next();

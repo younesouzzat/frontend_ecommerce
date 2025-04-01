@@ -1,12 +1,14 @@
 "use client";
 
-import { ReactNode, createContext, useEffect, useState } from "react";
+import { ReactNode, createContext, useContext, useEffect, useState, useCallback } from "react";
 import { getCookie } from "cookies-next";
 
-interface User {
+export interface User {
+  id: number | null;
   name: string | null;
   token: string | null;
   email: string | null;
+  displayname: string | null;
 }
 
 interface AuthContextType {
@@ -16,50 +18,64 @@ interface AuthContextType {
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
+export const useAuthContext = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuthContext must be used within an AuthProvider");
+  }
+  return context;
+};
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [token, setUserToken] = useState(null);
-  const [username, setUserName] = useState(null);
-  const [useremail, setUserEmail] = useState(null);
+  const [user, setUser] = useState<User>({
+    id: null,
+    name: null,
+    token: null,
+    email: null,
+    displayname: null,
+  });
   const [isLoading, setIsLoading] = useState(true);
 
-  const resetUserData = () => {
-    setUserToken(null);
-    setUserName(null);
-    setUserEmail(null);
-  };
+  const resetUserData = useCallback(() => {
+    setUser({
+      id: null,
+      name: null,
+      token: null,
+      email: null,
+      displayname: null,
+    });
+  }, []);
 
   useEffect(() => {
-    const getCookie = (name: any) => {
-      const cookie = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith(name + "="))
-        ?.split("=")[1];
+    const initializeAuth = async () => {
+      try {
+        const cookieData = getCookie("auth_data");
+        if (!cookieData) {
+          resetUserData();
+          return;
+        }
 
-      return cookie ? JSON.parse(decodeURIComponent(cookie)) : null;
+        const userData = typeof cookieData === 'string' ? JSON.parse(cookieData) : cookieData;
+        
+        setUser({
+          id: userData?.id || null,
+          token: userData?.token || null,
+          name: userData?.name || null,
+          email: userData?.email || null,
+          displayname: userData?.name?.split(" ")
+            .map((word: string) => word.charAt(0))
+            .join("") || null,
+        });
+      } catch (error) {
+        console.error("Failed to initialize auth:", error);
+        resetUserData();
+      } finally {
+        setIsLoading(false);
+      }
     };
 
-    const userData = getCookie("auth_data");
-
-    if (userData) {
-      try {
-        setUserToken(userData?.token || null);
-        setUserName(userData?.username || "Guest");
-        setUserEmail(userData?.useremail || "m@example.com");
-      } catch (error) {
-        console.error("Failed to parse user data from cookies:", error);
-        resetUserData();
-      }
-    } else {
-      resetUserData();
-    }
-    setIsLoading(false);
+    initializeAuth();
   }, [resetUserData]);
-
-  const user: User = {
-    token,
-    name: username,
-    email: useremail,
-  };
 
   return (
     <AuthContext.Provider value={{ user, isLoading }}>

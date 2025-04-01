@@ -12,7 +12,7 @@ export default function ThankYouPage() {
           <CardTitle className="text-xl font-semibold mt-4">Thank You for Your Order!</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-gray-600 mb-4">Your order has been placed successfully. You will receive a confirmation email shortly.</p>
+          <p className="text-gray-600 dark:text-white mb-4">Your order has been placed successfully. You will receive a confirmation email shortly.</p>
           <Link href="/">
             <Button className="mt-4">Return to Home</Button>
           </Link>

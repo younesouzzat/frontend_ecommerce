@@ -1,3 +1,4 @@
+"use client";
 import { RootState } from "@/redux/stores/store";
 import { Heart } from "lucide-react";
 import { useSelector } from "react-redux";

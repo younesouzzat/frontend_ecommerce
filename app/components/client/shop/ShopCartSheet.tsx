@@ -169,11 +169,11 @@ export default function ShopCartSheet() {
             <div className="space-y-4 mt-6">
               <div className="flex justify-between">
                 <span className="font-semibold">Subtotal</span>
-                <span className="text-gray-600">${subtotal.toFixed(2)}</span>
+                <span className="text-gray-600 dark:text-white">${subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between mt-2">
                 <span className="font-semibold text-lg">Total</span>
-                <span className="text-gray-600 text-lg">
+                <span className="text-gray-600 dark:text-white text-lg">
                   ${total.toFixed(2)}
                 </span>
               </div>

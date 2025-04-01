@@ -34,6 +34,7 @@ import { clearCart } from "@/redux/services/shop/globalSlice";
 
 interface FormData {
   name: string;
+  email: string;
   phone: string;
   address: string;
   city: string;
@@ -61,6 +62,7 @@ export default function CheckoutPage() {
   const form = useForm<FormData>({
     defaultValues: {
       name: "",
+      email: "",
       phone: "",
       address: "",
       city: "",
@@ -84,7 +86,7 @@ export default function CheckoutPage() {
     };
     createOrder(orderPayload);
   };
-  
+
   useEffect(() => {
     if (isSuccess) {
       dispatch(clearCart());
@@ -145,6 +147,31 @@ export default function CheckoutPage() {
                           <FormControl>
                             <Input
                               placeholder="Enter your phone number"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      rules={{
+                        required: "Email is required",
+                        pattern: {
+                          value:
+                            /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/,
+                          message: "Please enter a valid email address",
+                        },
+                      }}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email *</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Enter your email address"
                               {...field}
                             />
                           </FormControl>
@@ -364,13 +391,13 @@ export default function CheckoutPage() {
                     <div className="space-y-4 mt-6">
                       <div className="flex justify-between">
                         <span className="font-semibold">Subtotal</span>
-                        <span className="text-gray-600">
+                        <span className="text-gray-60 dark:text-white0">
                           ${subtotal.toFixed(2)}
                         </span>
                       </div>
                       <div className="flex justify-between mt-2">
                         <span className="font-semibold text-lg">Total</span>
-                        <span className="text-gray-600 text-lg">
+                        <span className="text-gray-600 dark:text-white text-lg">
                           ${total.toFixed(2)}
                         </span>
                       </div>

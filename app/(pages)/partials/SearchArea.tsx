@@ -1,11 +1,12 @@
+"use client";
 import React from "react";
-
 import SearchForm from "./SearchParts/SearchForm";
 import { Button } from "@/components/ui/button";
 import { routes } from "@/utils/routes";
 import { CategoryProps, NavItems } from "@/types";
 import DropdownMenuDemo from "./SearchParts/DropdownMenuDemo";
 import { useRouter } from "next/navigation";
+import { useGetCategoriesQuery } from "@/redux/services/client/categories";
 
 const items: NavItems[] = [
   { title: "Home", href: "/" },
@@ -14,12 +15,14 @@ const items: NavItems[] = [
   { title: "Contact", href: "/contact-us" },
 ];
 
-const SearchArea : React.FC<CategoryProps> = ({ categories, isLoading }) => {
+const SearchArea = () => {
+  const { data: categories, isLoading } = useGetCategoriesQuery();
   const router = useRouter();
 
   const handleShop = () => {
     router.push(routes.shop);
   };
+
   
   return (
     <div className="container hidden py-4 md:flex flex-col md:flex-row items-center">

@@ -26,9 +26,9 @@ import { routes } from "../utils/routes";
 const data = {
   teams: [
     {
-      name: "Acme Inc",
+      name: process.env.NEXT_APP_NAME,
       logo: GalleryVerticalEnd,
-      plan: "Enterprise",
+      plan: "Management",
     }
   ],
   navMain: [

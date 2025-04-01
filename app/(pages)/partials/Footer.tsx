@@ -105,7 +105,7 @@ export default function Footer({ socialItems }: FooterProps) {
       <div className="w-full bg-primary dark:bg-transparent py-4">
         <div className="container flex flex-col md:flex-row justify-between items-center text-white text-sm">
           <p className="order-2 md:order-1 text-center md:text-left">
-            © {new Date().getFullYear()} XpeedStudio. All Rights Reserved.
+            © {new Date().getFullYear()} Big Store. All Rights Reserved.
           </p>
           <ul className="order-1 md:order-2 flex items-center gap-4">
             {socialItems.map((item, index) => (

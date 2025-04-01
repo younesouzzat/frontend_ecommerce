@@ -1,6 +1,8 @@
 export const routes = {
   home: "/",
   shop: "/shop",
+  account: "/account/orders",
+  agentOrder: (id: string | number) => `/account/orders/${id}`,
   wishlist: "/wishlist",
   checkout: "/checkout",
   orderComplete: "/order-complete",
