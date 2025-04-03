@@ -1,12 +1,10 @@
 "use client";
 
-import { useGetProductsWithCategoryQuery } from "@/redux/services/client/products";
 import { Suspense, useEffect, useState, ReactNode } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Product, Category } from "@/types";
 
-// Component imports 
 import { BrandCarousel } from "../../components/client/home/brands";
 import FeaturedProduct from "../../components/client/home/sections/FeaturedProduct";
 import FirstBanner from "../../components/client/home/sections/FirstBanner";
@@ -14,6 +12,7 @@ import HomeSlider from "../../components/client/home/sections/HomeSlider";
 import HotSells from "../../components/client/home/sections/HotSells";
 import RecentProduct from "../../components/client/home/sections/RecentProduct";
 import ThreeBanners from "../../components/client/home/sections/ThreeBanners";
+import { useGetProductsWithCategoryQuery } from "@/redux/services/client/products";
 
 interface ErrorFallbackProps {
   error: Error;
