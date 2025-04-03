@@ -25,7 +25,7 @@ import { User, AuthContextType } from "@/types";
 const data = {
   teams: [
     {
-      name: process.env.NEXT_APP_NAME,
+      name: process.env.NEXT_PUBLIC_APP_NAME,
       logo: GalleryVerticalEnd,
       plan: "Management",
     }

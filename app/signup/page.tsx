@@ -8,7 +8,7 @@ export default function LoginPage() {
           href="/"
           className="flex items-center gap-2 self-center font-medium dark:text-white"
         >
-          {process.env.NEXT_APP_NAME}
+          {process.env.NEXT_PUBLIC_APP_NAME}
         </Link>
       <div className="w-full max-w-sm md:max-w-3xl">
         <SignupForm />
