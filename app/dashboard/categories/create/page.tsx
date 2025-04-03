@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Card,
   CardContent,
@@ -24,7 +24,7 @@ import { MESSAGES } from "@/constants/messages";
 type FormData = {
   name: string;
   email: string;
-  is_active: string;
+  is_active: boolean;
   password: string;
   roles: string[];
 };
@@ -53,7 +53,7 @@ const CreateCategoriePage = () => {
 
   const is_active = watch("is_active");
 
-  const onSubmit: SubmitHandler<FormData> = async (data) => {
+  const onSubmit: SubmitHandler<FormData> = async (data: any) => {
     const loadingToast = toast.loading(MESSAGES.OPERATION.CREATE);
     try {
 

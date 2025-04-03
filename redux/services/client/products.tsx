@@ -1,4 +1,23 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { Product, Category } from "@/types";
+
+interface ProductsResponse {
+  last_page?: number;
+  current_page?: number;
+  products: Product[];
+  categories?: Category[];
+}
+
+interface GetProductsParams {
+  page?: number;
+  perPage?: number;
+  searchQuery?: string;
+  category?: string;
+  category_id?: number | string | undefined;
+  categoryFilter?: string;
+  price_range?: string;
+  priceRange?: string;
+}
 
 export const clientProductsApi = createApi({
   reducerPath: "clientProductsApi",
@@ -6,41 +25,43 @@ export const clientProductsApi = createApi({
     baseUrl: process.env.NEXT_PUBLIC_API_URL,
     credentials: "include",
   }),
+  tagTypes: ["Products", "Categories"],
   endpoints: (builder) => ({
-    getProducts: builder.query({
-      query: (params) => {
-        console.log("Received params:", params);
-        
+    getProducts: builder.query<ProductsResponse, GetProductsParams>({
+      query: ({ page = 1, perPage = 10, searchQuery, category, categoryFilter, price_range, priceRange }) => {
         const queryParams = new URLSearchParams({
-          page: String(params.page || 1),
-          per_page: String(params.perPage || 10),
+          page: String(page),
+          per_page: String(perPage),
         });
-    
-        if (params.searchQuery) queryParams.append("search", params.searchQuery);
+
+        if (searchQuery) queryParams.append("search", searchQuery);
         
-        const category = params.category || params.categoryFilter || 'all';
-        if (category && category !== 'all') queryParams.append("category", category);
-        
-        const priceRange = params.price_range || params.priceRange;
-        if (priceRange) queryParams.append("price_range", priceRange);
-    
+        const selectedCategory = category || categoryFilter || 'all';
+        if (selectedCategory !== 'all') queryParams.append("category", selectedCategory);
+
+        const selectedPriceRange = price_range || priceRange;
+        if (selectedPriceRange) queryParams.append("price_range", selectedPriceRange);
+
         return `shop-products?${queryParams.toString()}`;
       },
-      keepUnusedDataFor: 0,
+      keepUnusedDataFor: 60,
+      providesTags: ["Products"],
     }),
-    getProductsWithCategory: builder.query({
+    getProductsWithCategory: builder.query<ProductsResponse, void>({
       query: () => `category-products`,
-      keepUnusedDataFor: 0,
+      keepUnusedDataFor: 60,
+      providesTags: ["Categories"],
     }),
-    getProductById: builder.query({
+    getProductById: builder.query<Product, string>({
       query: (id) => `shop-product/${id}`,
-      keepUnusedDataFor: 0,
+      keepUnusedDataFor: 60,
+      providesTags: ["Products"],
     }),
   }),
 });
 
 export const {
   useGetProductsQuery,
-  useGetProductByIdQuery,
   useGetProductsWithCategoryQuery,
+  useGetProductByIdQuery,
 } = clientProductsApi;

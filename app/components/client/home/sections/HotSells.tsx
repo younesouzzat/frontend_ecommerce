@@ -25,8 +25,7 @@ const Items = [
     buttonText: "Go Shop",
   },
 ];
-
-export default function HotSells({ products, isLoading }) {
+const HotSells = ({ products, isLoading }: any) => {
   const { theme } = useTheme();
 
   return (
@@ -72,3 +71,5 @@ export default function HotSells({ products, isLoading }) {
     </div>
   );
 }
+
+export default HotSells;

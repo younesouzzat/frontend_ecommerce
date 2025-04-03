@@ -5,8 +5,10 @@ import CompareList from "../components/client/shop/CompareList";
 import QuickView from "../components/client/shop/QuickView";
 import SearchArea from "./partials/SearchArea";
 
+type IconName = "Facebook" | "Twitter" | "Instagram" | "Youtube";
+
 interface SocialItem {
-  icon: string; // Changed to string
+  icon: IconName;
   href: string;
   title: string;
 }

@@ -75,7 +75,7 @@ const UpdateProductPage = () => {
   const { data: productData, isLoading: isLoadingProduct } =
     useGetProductByIdQuery(id as string);
   const { data: categories, isLoading: isLoadingCategory } =
-    useGetAllCategoriesQuery();
+    useGetAllCategoriesQuery(undefined);
 
   const [categoryValue, setCategory] = useState<string>("");
   const [categoryOldValue, setOldCategory] = useState<string>("");
@@ -135,7 +135,7 @@ const UpdateProductPage = () => {
       if (product?.dimensions && typeof product.dimensions === "string") {
         try {
           dimensions = JSON.parse(product.dimensions);
-        } catch (error) {
+        } catch (error: any) {
           console.error("Error parsing dimensions JSON", error);
         }
       } else if (typeof product?.dimensions === "object") {
@@ -147,7 +147,7 @@ const UpdateProductPage = () => {
         try {
           const imagesArray = product.images;
           parsedImages = imagesArray.map((img: string) => img);
-        } catch (error) {
+        } catch (error: any) {
           console.error("Error parsing images JSON", error);
         }
       }
@@ -187,7 +187,7 @@ const UpdateProductPage = () => {
       categories.find((cat: any) => cat.id.toString() === categoryValue)?.id;
       setOldCategory(oldCat)
     }
-  }, [productData, categories, reset, editor, isInitialized]);
+  }, [productData, categories, categoryValue, reset, editor, isInitialized]);
 
   const onSubmit = async (data: FormData) => {
     const loadingToast = toast.loading(MESSAGES.OPERATION.UPDATE);
@@ -216,7 +216,7 @@ const UpdateProductPage = () => {
         });
       }
 
-      if (data.images?.length > 0) {
+      if (data.images && data.images?.length > 0) {
         data.images.forEach((url) => {
           formData.append("existing_images[]", url);
         });
@@ -355,7 +355,8 @@ const UpdateProductPage = () => {
                     maxSize={2 * 1024 * 1024}
                     isCover={true}
                     existingCover={watch("cover")}
-                    onRemoveExisting={(url) => setValue("cover", "")}
+                    // onRemoveExisting={(url) => setValue("cover", "")}
+                    onRemoveExisting={() => setValue("cover", "")}
                   />
                 </div>
 
@@ -370,7 +371,7 @@ const UpdateProductPage = () => {
                       const currentImages = watch("images");
                       setValue(
                         "images",
-                        currentImages.filter((img) => img !== url)
+                        currentImages?.filter((img) => img !== url)
                       );
                     }}
                   />
@@ -410,7 +411,7 @@ const UpdateProductPage = () => {
                             <Loader2 className="h-5 w-5 animate-spin" />
                           </div>
                         ) : categories?.length > 0 ? (
-                          categories.map((cat) => (
+                          categories.map((cat: any) => (
                             <SelectItem
                               className="cursor-pointer"
                               key={cat.id}

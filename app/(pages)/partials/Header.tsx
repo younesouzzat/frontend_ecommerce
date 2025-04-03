@@ -13,7 +13,6 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import ShopCartSheet from "@/app/components/client/shop/ShopCartSheet";
 import { routes } from "@/utils/routes";
 

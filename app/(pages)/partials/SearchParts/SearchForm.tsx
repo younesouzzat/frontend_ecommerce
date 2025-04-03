@@ -3,21 +3,17 @@ import React, { useState } from "react";
 import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useRouter } from "next/navigation";
 import { routes } from "@/utils/routes";
-import { CategoryProps } from "@/types";
+import { CategoryItems } from "@/types";
 
-const categories = [
-  "Clothing",
-  "Accessories",
-  "Bags",
-  "Footwear",
-  "Electronics",
-];
-const SearchForm: React.FC<CategoryProps> = ({ categories, isLoading }) => {
+interface SearchFormProps {
+  categories: CategoryItems[];
+  isLoading: boolean;
+}
+
+const SearchForm: React.FC<SearchFormProps> = ({ categories, isLoading }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
-  const router = useRouter();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,12 +27,10 @@ const SearchForm: React.FC<CategoryProps> = ({ categories, isLoading }) => {
       searchParams.set("category", selectedCategory.toLowerCase());
     }
 
-    // Construct the full URL with search parameters
     const searchUrl = searchParams.toString()
       ? `${routes.shop}?${searchParams.toString()}`
       : routes.shop;
 
-    // router.push(searchUrl);
     window.location.href = searchUrl;
   };
 
@@ -58,9 +52,9 @@ const SearchForm: React.FC<CategoryProps> = ({ categories, isLoading }) => {
       >
         <option value="">All categories</option>
         {isLoading ? (
-          <option>No data</option>
+          <option>Loading...</option>
         ) : (
-          categories && categories?.map((category: any) => (
+          categories && categories.map((category: any) => (
             <option key={`sf${category.id}`} value={category.name}>
               {category.name}
             </option>

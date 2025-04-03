@@ -7,7 +7,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -25,10 +24,9 @@ import { MESSAGES } from "@/constants/messages";
 import { useDeleteOrderMutation } from "@/redux/services/admin/orders";
 import { routes } from "@/utils/routes";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
 
 export type Order = {
   id: string;

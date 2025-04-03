@@ -19,7 +19,7 @@ import {
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { useCartSheet } from "@/app/context/CartSheetContext";
-import { Product } from "@/types";
+import { CartItem } from "@/types";
 
 const HEADERS = ["Product", "Title", "Price", "Actions"];
 
@@ -28,13 +28,13 @@ export default function ShopPage() {
   const { openSheet } = useCartSheet();
   const { wishlist } = useSelector((state: RootState) => state.global);
 
-  const handleAddToCart = (product: Product) => {
+  const handleAddToCart = (product: CartItem) => {
     dispatch(addToCart({ product }));
     toast.success("Product added to cart!");
     openSheet("cart");
   };
 
-  const handleRemoveFromWishlist = (product: Product) => {
+  const handleRemoveFromWishlist = (product: CartItem) => {
     dispatch(removeFromWishlist(product));
     toast.success("Removed from your wishlist");
   };
@@ -55,7 +55,7 @@ export default function ShopPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {wishlist.map((product) => (
+              {wishlist.map((product: any) => (
                 <TableRow key={product.id}>
                   <TableCell className="flex justify-center">
                     <Image

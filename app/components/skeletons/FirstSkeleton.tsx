@@ -1,6 +1,6 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function FirstSkeleton({ index }) {
+export default function FirstSkeleton({ index } : any) {
   return (
     <div
       key={index}

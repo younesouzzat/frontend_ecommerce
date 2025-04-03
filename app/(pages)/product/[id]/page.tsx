@@ -14,40 +14,53 @@ import { useGetProductByIdQuery } from "@/redux/services/client/products";
 import { useParams } from "next/navigation";
 import { useCartSheet } from "@/app/context/CartSheetContext";
 import toast from "react-hot-toast";
-import { ArrowRightLeft, Heart, Share2, ShoppingCart, Star } from "lucide-react";
+import {
+  ArrowRightLeft,
+  Heart,
+  Share2,
+  ShoppingCart,
+  Star,
+} from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import SliderProduct from "@/app/components/client/product/SliderProduct";
+import { CartItem, Dimensions } from "@/types";
+
+type GlobalState = {
+  wishlist: CartItem[];
+  compareList: CartItem[];
+};
 
 export default function ProductPage() {
-  const { id } = useParams();
-  const { data: product, error, isLoading } = useGetProductByIdQuery(id);
+  const { id } = useParams<{ id: string }>();
+  const productId = id || "";
+  // const { data: product, isLoading } = useGetProductByIdQuery<CartItem | null>(productId);
+  const { data: product, isLoading } = useGetProductByIdQuery(productId, {
+    selectFromResult: ({ data, ...rest }) => ({
+      data: data as CartItem | undefined,
+      ...rest,
+    }),
+  });
+
   const dispatch = useDispatch();
-  const [dimensions, setDimenssions] = useState([]);
-  const [quantity, setQuantity] = useState(1);
+  const [dimensions, setDimensions] = useState<Dimensions | null>(null);
+  const [quantity, setQuantity] = useState<number>(1);
 
   const { openSheet } = useCartSheet();
-  const { wishlist, compareList, cartItems } = useSelector(
-    (state) => state.global
+  const { wishlist, compareList } = useSelector(
+    (state: { global: GlobalState }) => state.global
   );
 
-  const handleQuantityChange = (value) => {
-    const newQuantity = parseInt(value);
+  const handleQuantityChange = (value: string) => {
+    const newQuantity = parseInt(value, 10);
     if (!isNaN(newQuantity) && newQuantity > 0) {
       setQuantity(newQuantity);
     }
   };
 
-  const handleIncrement = () => {
-    setQuantity(quantity + 1);
-  };
+  const handleIncrement = () => setQuantity((prev) => prev + 1);
+  const handleDecrement = () => quantity > 1 && setQuantity((prev) => prev - 1);
 
-  const handleDecrement = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1);
-    }
-  };
-
-  const handleWishlist = (product) => {
+  const handleWishlist = (product: CartItem) => {
     dispatch(toggleWishlist(product));
     const isAdding = !wishlist.some((item) => item.id === product.id);
     toast.success(
@@ -55,7 +68,7 @@ export default function ProductPage() {
     );
   };
 
-  const handleCompare = (product) => {
+  const handleCompare = (product: CartItem) => {
     dispatch(toggleCompare(product));
     const isAdding = !compareList.some((item) => item.id === product.id);
     toast.success(
@@ -63,38 +76,30 @@ export default function ProductPage() {
     );
   };
 
-  const handelAddToCart = () => {
+  const handleAddToCart = () => {
+    if (!product) return;
     dispatch(addToCart({ product, quantity }));
     toast.success("Product added to cart!");
     openSheet("cart");
   };
 
-  const inStock = true;
-  const isWishlisted = wishlist.some((item) => item.id === product?.id);
-  const isInCompare = compareList.some((item) => item.id === product?.id);
-
-  if (error) {
-    return (
-      <div className="container p-8 text-center">
-        <h2 className="text-xl font-bold text-red-500 mb-2">
-          Error loading product
-        </h2>
-        <p className="text-gray-600">
-          We couldn't load the product information. Please try again later.
-        </p>
-        <Button className="mt-4" onClick={() => window.location.reload()}>
-          Retry
-        </Button>
-      </div>
-    );
-  }
+  const isWishlisted = product
+    ? wishlist.some((item) => item.id === product.id)
+    : false;
+  const isInCompare = product
+    ? compareList.some((item) => item.id === product.id)
+    : false;
 
   useEffect(() => {
     if (!isLoading && product?.dimensions) {
       try {
-        const dimensions = JSON.parse(product?.dimensions);
-        setDimenssions(dimensions);
-      } catch (error) {
+        // const parsedDimensions: Dimensions = JSON.parse(product.dimensions);
+        const parsedDimensions =
+          typeof product.dimensions === "string"
+            ? JSON.parse(product.dimensions)
+            : product.dimensions;
+        setDimensions(parsedDimensions);
+      } catch (error: any) {
         console.error("Failed to parse dimensions:", error);
       }
     }
@@ -103,26 +108,24 @@ export default function ProductPage() {
   return (
     <div className="container py-8">
       {isLoading ? (
-        <>
-          <div className="flex flex-col md:flex-row gap-8 p-4">
-            <div className="w-full md:w-1/2">
-              <Skeleton className="h-96 w-full rounded-xl" />
-            </div>
-            <div className="w-full md:w-1/2 flex flex-col gap-4">
-              <div className="space-y-2">
-                <Skeleton className="h-6 w-full" />
-                <Skeleton className="h-6 w-full" />
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-8 w-full" />
-                <Skeleton className="h-8 w-full" />
-                <Skeleton className="h-8 w-full" />
-              </div>
+        <div className="flex flex-col md:flex-row gap-8 p-4">
+          <div className="w-full md:w-1/2">
+            <Skeleton className="h-96 w-full rounded-xl" />
+          </div>
+          <div className="w-full md:w-1/2 flex flex-col gap-4">
+            <div className="space-y-2">
+              <Skeleton className="h-6 w-full" />
+              <Skeleton className="h-6 w-full" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-8 w-full" />
+              <Skeleton className="h-8 w-full" />
+              <Skeleton className="h-8 w-full" />
             </div>
           </div>
-        </>
-      ) : (
+        </div>
+      ) : product ? (
         <>
           <div className="flex flex-col md:flex-row gap-8 p-4">
             <SliderProduct product={product} />
@@ -132,27 +135,17 @@ export default function ProductPage() {
               {/* Product Title and Badges */}
               <div className="mb-2">
                 <div className="flex flex-wrap gap-2 mb-2">
-                  {inStock ? (
-                    <Badge className="bg-green-500">In Stock</Badge>
-                  ) : (
-                    <Badge className="bg-red-500">Out of Stock</Badge>
-                  )}
-                  {product?.isNew && <Badge className="bg-blue-500">New</Badge>}
-                  {product?.discount > 0 && (
-                    <Badge className="bg-orange-500">
-                      Sale {product.discount}% Off
-                    </Badge>
-                  )}
+                  <Badge className="bg-green-500">In Stock</Badge>
                 </div>
-                <h1 className="text-3xl font-bold">{product?.title}</h1>
+                <h1 className="text-3xl font-bold">{product.title}</h1>
               </div>
 
               {/* Price */}
               <div className="flex items-center gap-3 my-2">
-                {product?.is_promotion ? (
+                {product.is_promotion ? (
                   <>
                     <span className="text-2xl font-bold text-secondarybackground">
-                      ${product?.price_special}
+                      ${product.price_special}
                     </span>
                     <span className="text-lg text-gray-500 line-through">
                       ${product.price}
@@ -160,7 +153,7 @@ export default function ProductPage() {
                   </>
                 ) : (
                   <span className="text-2xl font-bold text-secondarybackground">
-                    ${product?.price}
+                    ${product.price}
                   </span>
                 )}
               </div>
@@ -168,13 +161,12 @@ export default function ProductPage() {
               {/* Quick Info */}
               <div className="grid grid-cols-2 gap-2 my-2">
                 <p className="text-sm text-gray-600">
-                  SKU: <span className="font-medium">{product?.ref}</span>
+                  SKU: <span className="font-medium">{product.ref}</span>
                 </p>
                 <p className="text-sm text-gray-600">
-                  Weight:{" "}
-                  <span className="font-medium">{product?.size} kg</span>
+                  Weight: <span className="font-medium">{product.size} kg</span>
                 </p>
-                {dimensions.length > 0 && (
+                {dimensions && (
                   <p className="text-sm text-gray-600">
                     Dimensions:{" "}
                     <span className="font-medium">
@@ -183,10 +175,10 @@ export default function ProductPage() {
                     </span>
                   </p>
                 )}
-                {product?.category && (
+                {product.category && (
                   <p className="text-sm text-gray-600">
                     Category:{" "}
-                    <span className="font-medium">{product?.category}</span>
+                    <span className="font-medium">{product.category}</span>
                   </p>
                 )}
               </div>
@@ -195,7 +187,7 @@ export default function ProductPage() {
               <div className="my-4">
                 <p
                   className="text-gray-700 leading-relaxed"
-                  dangerouslySetInnerHTML={{ __html: product?.description }}
+                  dangerouslySetInnerHTML={{ __html: product.description }}
                 />
               </div>
 
@@ -208,7 +200,6 @@ export default function ProductPage() {
                     onClick={handleDecrement}
                     className="h-10 w-10 rounded-r-none"
                     aria-label="Decrease quantity"
-                    disabled={!inStock}
                   >
                     -
                   </Button>
@@ -217,14 +208,12 @@ export default function ProductPage() {
                     value={quantity}
                     onChange={(e) => handleQuantityChange(e.target.value)}
                     className="h-10 w-14 border-y border-gray-300 text-center focus:outline-none"
-                    disabled={!inStock}
                   />
                   <Button
                     variant="outline"
                     onClick={handleIncrement}
                     className="h-10 w-10 rounded-l-none"
                     aria-label="Increase quantity"
-                    disabled={!inStock}
                   >
                     +
                   </Button>
@@ -233,9 +222,8 @@ export default function ProductPage() {
 
               {/* Add to Cart Button */}
               <Button
-                onClick={handelAddToCart}
+                onClick={handleAddToCart}
                 className="w-full h-12 mt-2 text-lg"
-                disabled={!inStock}
               >
                 <ShoppingCart className="mr-2 h-5 w-5" />
                 Add to Cart
@@ -289,7 +277,7 @@ export default function ProductPage() {
                 <TabsTrigger value="specifications">Specifications</TabsTrigger>
                 <TabsTrigger value="reviews">
                   Reviews
-                  {product?.reviews?.length > 0 &&
+                  {product.reviews?.length > 0 &&
                     ` (${product.reviews.length})`}
                 </TabsTrigger>
               </TabsList>
@@ -297,7 +285,7 @@ export default function ProductPage() {
               <TabsContent value="details" className="p-4">
                 <div
                   dangerouslySetInnerHTML={{
-                    __html: product?.fullDescription || product?.description,
+                    __html: product.fullDescription || product.description,
                   }}
                 />
               </TabsContent>
@@ -306,11 +294,13 @@ export default function ProductPage() {
                 <table className="w-full border-collapse">
                   <tbody>
                     {Object.entries(
-                      product?.specifications || {
-                        Weight: `${product?.size} kg`,
-                        Dimensions: `${dimensions.length} × ${dimensions.width} × ${dimensions.height} cm`,
-                        SKU: product?.ref,
-                        Material: product?.material || "Not specified",
+                      product.specifications || {
+                        Weight: `${product.size} kg`,
+                        Dimensions: dimensions
+                          ? `${dimensions.length} × ${dimensions.width} × ${dimensions.height} cm`
+                          : "Not specified",
+                        SKU: product.ref,
+                        Material: product.material || "Not specified",
                       }
                     ).map(([key, value]) => (
                       <tr key={key} className="border-b">
@@ -323,7 +313,7 @@ export default function ProductPage() {
               </TabsContent>
 
               <TabsContent value="reviews" className="p-4">
-                {product?.reviews?.length > 0 ? (
+                {product.reviews?.length > 0 ? (
                   <div className="space-y-4">
                     {product.reviews.map((review, index) => (
                       <div key={index} className="border p-4 rounded-lg">
@@ -364,17 +354,7 @@ export default function ProductPage() {
             </Tabs>
           </div>
         </>
-      )}
-
-      {/* Related Products */}
-      {product?.relatedProducts && product.relatedProducts.length > 0 && (
-        <div className="mt-16">
-          <h2 className="text-2xl font-bold mb-6">You May Also Like</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {/* Related product cards would go here */}
-          </div>
-        </div>
-      )}
+      ) : null}
     </div>
   );
 }

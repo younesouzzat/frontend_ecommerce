@@ -1,7 +1,7 @@
 "use client";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import { User, columns } from "./columns";
+import { columns } from "./columns";
 import { DataTable } from "./data-table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PlusCircle, Users } from "lucide-react";
@@ -13,6 +13,7 @@ import { useState } from "react";
 import { MESSAGES } from "@/constants/messages";
 
 export default function UsersPage() {
+
   const [page, setPage] = useState(1);
   const perPage = 5;
 

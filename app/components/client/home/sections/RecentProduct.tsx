@@ -10,14 +10,7 @@ import {
 import ImageProdSkeleton from "@/app/components/skeletons/ImageProdSkeleton";
 import Link from "next/link";
 import { routes } from "@/utils/routes";
-
-interface Product {
-  image: string;
-  title: string;
-  price: number;
-  is_promotion?: boolean;
-  price_special?: number;
-}
+import { Product } from "@/types";
 
 interface RecentProductProps {
   products: Product[];

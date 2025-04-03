@@ -28,9 +28,17 @@ export default function QuickView() {
 
   if (!quickViewProduct) return null;
 
-  const dimensions = JSON.parse(quickViewProduct?.dimensions);
-  const inCompare  = compareList.some((item) => item.id === quickViewProduct.id);
-  const inWishlist = wishlist.some((item) => item.id === quickViewProduct.id);
+  // const dimensions = JSON.parse(quickViewProduct?.dimensions);
+  const dimensions =
+    typeof quickViewProduct.dimensions === "string"
+      ? JSON.parse(quickViewProduct.dimensions)
+      : quickViewProduct.dimensions;
+  const inCompare = compareList.some(
+    (item: any) => item.id === quickViewProduct.id
+  );
+  const inWishlist = wishlist.some(
+    (item: any) => item.id === quickViewProduct.id
+  );
 
   return (
     <Dialog
@@ -106,7 +114,7 @@ export default function QuickView() {
             <div className="flex space-x-2 pt-4">
               <Button
                 className="flex-1"
-                onClick={() => dispatch(addToCart({ quickViewProduct }))}
+                onClick={() => dispatch(addToCart({ quickViewProduct } as any))}
               >
                 <ShoppingCart size={16} className="mr-2" />
                 Add to Cart

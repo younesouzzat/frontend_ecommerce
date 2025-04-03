@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, {useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -96,7 +96,7 @@ export default function CheckoutPage() {
     if (isError) {
       toast.error("Failed to place order. Please try again later.");
     }
-  }, [isSuccess, isError]);
+  }, [router, dispatch, isSuccess, isError]);
   return (
     <div className="container mx-auto p-6 max-w-6xl">
       <h1 className="text-3xl font-bold mb-8 text-center md:text-left">
@@ -211,7 +211,8 @@ export default function CheckoutPage() {
                       control={form.control}
                       name="city"
                       rules={{ required: "City is required" }}
-                      render={({ field }) => (
+                      render={() => (
+                      // render={({ field }) => (
                         <FormItem>
                           <FormLabel>City *</FormLabel>
                           <FormControl>
@@ -349,7 +350,7 @@ export default function CheckoutPage() {
                   {/* Display Cart Items */}
                   {cartItems.length > 0 ? (
                     <ScrollArea className="max-h-[400px] overflow-y-auto space-y-4">
-                      {cartItems.map((item) => (
+                      {cartItems.map((item: any) => (
                         <div
                           key={item.id}
                           className="flex justify-between items-center p-4 border-b"

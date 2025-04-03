@@ -1,16 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // async redirects() {
-  //   return [
-  //     {
-  //       source: "/",
-  //       // destination: "/login",
-  //       destination: "/",
-  //       permanent: false,
-  //     },
-  //   ];
-  // },
   webpack(config) {
     config?.module?.rules?.push({
       test: /\.svg$/,
@@ -32,7 +22,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "lh3.googleusercontent.com", port: "" },
       { protocol: "https", hostname: "platform-lookaside.fbsbx.com", port: "" },
     ],
-  },
+  }
 };
 
 export default nextConfig;

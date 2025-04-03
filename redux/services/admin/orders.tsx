@@ -12,7 +12,7 @@ const getAuthToken = () => {
     try {
       const orderData = JSON.parse(decodeURIComponent(cookie));
       return orderData?.token || null;
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error parsing auth token:", error);
       return null;
     }

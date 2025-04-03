@@ -2,7 +2,7 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { prod1, prod2, prod3, prod4, prod5, prod6 } from "@/utils/assets";
-import { Heart, HeartIcon, Star, StarIcon } from "lucide-react";
+import { HeartIcon, StarIcon } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import React from "react";

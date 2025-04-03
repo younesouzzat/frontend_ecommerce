@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Card,
   CardContent,
@@ -10,7 +10,6 @@ import {
 import { Loader2, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-hot-toast";
-import { z } from "zod";
 import { Label } from "@/components/ui/label";
 import { useParams, useRouter } from "next/navigation";
 import {
@@ -18,7 +17,6 @@ import {
   useLazyFetchInvoiceQuery,
 } from "@/redux/services/admin/orders";
 import { routes } from "@/utils/routes";
-import { MESSAGES } from "@/constants/messages";
 import {
   Table,
   TableHeader,
@@ -27,11 +25,6 @@ import {
   TableCell,
   TableFooter,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-
-const orderSchema = z.object({
-  status: z.number().min(0).max(1),
-});
 
 const UpdateOrderPage = () => {
   const router = useRouter();
@@ -43,22 +36,8 @@ const UpdateOrderPage = () => {
 
   const [
     fetchInvoice,
-    { data: invoiceData, isLoading: isLoadingInvoice, error: invoiceError },
+    { data: invoiceData, isLoading: isLoadingInvoice },
   ] = useLazyFetchInvoiceQuery();
-
-  useEffect(() => {
-    if (orderData?.order) {
-      const order = orderData.order;
-      let statusValue = 0;
-
-      if (order.status !== undefined && order.status !== null) {
-        statusValue =
-          typeof order.status === "string"
-            ? parseInt(order.status, 10)
-            : order.status;
-      }
-    }
-  }, [orderData]);
 
   const handleDownload = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -88,7 +67,7 @@ const UpdateOrderPage = () => {
       link.click();
       document.body.removeChild(link);
       toast.success("Invoice download started");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Download error:", error);
       toast.error("Failed to download invoice");
     }
@@ -102,7 +81,7 @@ const UpdateOrderPage = () => {
     );
   }
 
-  const renderOrderDetails = (item) => {
+  const renderOrderDetails = (item: any) => {
     const productTitle = item.products_info?.[0]?.titre || "Unknown Product";
     const quantity = item.qte || "N/A";
     const priceUnit = item.price_unit ? `${item.price_unit.toFixed(2)}` : "N/A";
@@ -120,7 +99,7 @@ const UpdateOrderPage = () => {
     );
   };
 
-  const renderStatusBadge = (status: number) => {
+  const renderStatusBadge = (status: string) => {
     switch (status) {
       case "0":
         return (

@@ -1,6 +1,4 @@
 "use client";
-
-import { Switch } from "@/components/ui/switch";
 import { Moon, Sun, Monitor } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
@@ -15,7 +13,7 @@ export function ThemeToggle() {
 
   const cycleTheme = () => {
     const themes = ["light", "dark", "system"];
-    const nextTheme = themes[(themes.indexOf(theme) + 1) % themes.length];
+    const nextTheme = themes[(themes.indexOf(theme as any) + 1) % themes.length];
     setTheme(nextTheme);
   };
 

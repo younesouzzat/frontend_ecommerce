@@ -8,8 +8,8 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-export function PaginationDemo({ page, totalPages, onPageChange }) {
-  const handlePageClick = (pageNumber) => {
+export function PaginationDemo({ page, totalPages, onPageChange } : any) {
+  const handlePageClick = (pageNumber : any) => {
     if (pageNumber >= 1 && pageNumber <= totalPages) {
       onPageChange(pageNumber);
     }

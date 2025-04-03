@@ -29,17 +29,17 @@ const FileUpload: React.FC<FileUploadProps> = ({
 }) => {
   const [files, setFiles] = useState<FileWithPreview[]>([]);
 
-  const validateFile = (file: File) => {
-    if (!file.type.startsWith('image/')) {
-      throw new Error(`${file.name} is not an image file`);
-    }
+  // const validateFile = (file: File) => {
+  //   if (!file.type.startsWith('image/')) {
+  //     throw new Error(`${file.name} is not an image file`);
+  //   }
 
-    if (file.size > maxSize) {
-      throw new Error(`${file.name} is larger than ${maxSize / 1024 / 1024}MB`);
-    }
+  //   if (file.size > maxSize) {
+  //     throw new Error(`${file.name} is larger than ${maxSize / 1024 / 1024}MB`);
+  //   }
 
-    return true;
-  };
+  //   return true;
+  // };
 
   const onDrop = useCallback((acceptedFiles: File[], rejectedFiles: any[]) => {
     // Handle rejected files
@@ -69,6 +69,18 @@ const FileUpload: React.FC<FileUploadProps> = ({
       toast.error(`Maximum ${maxFiles} files allowed`);
       return;
     }
+
+    const validateFile = (file: File) => {
+      if (!file.type.startsWith('image/')) {
+        throw new Error(`${file.name} is not an image file`);
+      }
+  
+      if (file.size > maxSize) {
+        throw new Error(`${file.name} is larger than ${maxSize / 1024 / 1024}MB`);
+      }
+  
+      return true;
+    };
 
     try {
       // Validate each file

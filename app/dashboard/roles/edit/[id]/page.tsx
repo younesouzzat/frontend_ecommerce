@@ -56,7 +56,7 @@ const EditRolePage = () => {
     }
   }, [role, reset]);
 
-  const onSubmit: SubmitHandler<FormData> = async (data) => {
+  const onSubmit: SubmitHandler<FormData> = async (data: any) => {
     const loadingToast = toast.loading(MESSAGES.OPERATION.UPDATE);
     try {
       const response = await updateRole({

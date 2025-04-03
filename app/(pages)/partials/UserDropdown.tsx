@@ -8,26 +8,17 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { LogOut, Package, User } from "lucide-react";
+import { LogOut, Package, UserIcon } from "lucide-react";
 import Link from "next/link";
 import { toast } from "react-hot-toast";
-
-interface User {
-  name: string;
-  email: string;
-  token: string;
-  displayname: string;
-}
-
-interface NavUserProps {
-  user: User;
-}
+import { routes } from "@/utils/routes";
+import { User } from "@/types";
 
 const UserDropdown = ({
   user,
   onLogout,
 }: {
-  user: NavUserProps;
+  user: User | null;
   onLogout: () => void;
 }) => {
   const router = useRouter();
@@ -38,7 +29,7 @@ const UserDropdown = ({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="px-4 py-2 text-sm font-medium">
-              <User className="w-4 h-4 mr-1" />
+              <UserIcon className="w-4 h-4 mr-1" />
               {user?.name || "My Account"}
             </Button>
           </DropdownMenuTrigger>

@@ -15,7 +15,7 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
   const [activeTab, setActiveTab] = useState<number | null>(null);
 
   useEffect(() => {
-    if (categories.length > 0) {
+    if (categories && categories.length > 0) {
       setActiveTab(categories[0].id);
     }
   }, [categories]);

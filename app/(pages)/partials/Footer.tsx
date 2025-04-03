@@ -3,15 +3,43 @@ import { Mail, MapPin, PhoneCall } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import {
+  FacebookIcon,
+  TwitterIcon,
+  InstagramIcon,
+  YoutubeIcon,
+  TruckIcon,
+  GlobeIcon,
+  PhoneCallIcon,
+} from "lucide-react";
 
-interface SocialItemProps {
-  icon: React.ElementType;
+type IconName =
+  | "Facebook"
+  | "Twitter"
+  | "Instagram"
+  | "Youtube"
+  | "TruckIcon"
+  | "Globe"
+  | "PhoneCallIcon";
+
+const iconMap: Record<IconName, React.ElementType> = {
+  Facebook: FacebookIcon,
+  Twitter: TwitterIcon,
+  Instagram: InstagramIcon,
+  Youtube: YoutubeIcon,
+  TruckIcon: TruckIcon,
+  Globe: GlobeIcon,
+  PhoneCallIcon: PhoneCallIcon,
+};
+
+interface SocialItem {
   href: string;
+  icon: IconName;
   title: string;
 }
 
 interface FooterProps {
-  socialItems: SocialItemProps[];
+  socialItems: SocialItem[];
 }
 
 const quickLinks = [
@@ -34,7 +62,7 @@ const storeLocations = [
   "Albarto",
 ];
 
-export default function Footer({ socialItems }: FooterProps) {
+const Footer: React.FC<FooterProps> = ({ socialItems }) => {
   return (
     <footer className="w-full bg-gray-100 dark:bg-gray-900">
       <div className="container py-6 px-4 md:px-0 flex flex-col items-center gap-6">
@@ -108,22 +136,27 @@ export default function Footer({ socialItems }: FooterProps) {
             © {new Date().getFullYear()} Big Store. All Rights Reserved.
           </p>
           <ul className="order-1 md:order-2 flex items-center gap-4">
-            {socialItems.map((item, index) => (
-              <li key={index}>
-                <a
-                  href={item.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 hover:text-gray-300 transition"
-                >
-                  <item.icon className="size-5" />
-                  {item.title}
-                </a>
-              </li>
-            ))}
+            {socialItems.map((item, index) => {
+              const IconComponent = iconMap[item.icon];
+              return (
+                <li key={index}>
+                  <a
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 hover:text-gray-300 transition"
+                  >
+                    <IconComponent className="size-5" />
+                    {item.title}
+                  </a>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </div>
     </footer>
   );
-}
+};
+
+export default Footer;

@@ -20,7 +20,6 @@ import {
 import { X } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useCartSheet } from "@/app/context/CartSheetContext";
-import Link from "next/link";
 import { routes } from "@/utils/routes";
 import { useRouter } from "next/navigation";
 
@@ -32,22 +31,12 @@ export default function ShopCartSheet() {
 
   const count = cartItems.length ?? 0;
 
-  const totalQuantity = cartItems.reduce(
-    (total, item) => total + item.quantity,
-    0
-  );
-
   const subtotal = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
     0
   );
 
   const total = subtotal;
-
-  const handleQuantityChange = (id: number, quantity: number) => {
-    if (quantity < 1 || isNaN(quantity)) return;
-    dispatch(updateQuantity({ id, quantity }));
-  };
 
   const handleRemoveItem = (id: number) => {
     dispatch(removeFromCart(id));
@@ -95,7 +84,7 @@ export default function ShopCartSheet() {
           {/* Display Cart Items */}
           {cartItems.length > 0 ? (
             <ScrollArea className="max-h-[400px] overflow-y-auto space-y-4">
-              {cartItems.map((item) => (
+              {cartItems.map((item: any) => (
                 <div
                   key={item.id}
                   className="flex justify-between items-center p-4 border-b"
@@ -151,7 +140,7 @@ export default function ShopCartSheet() {
                     variant="ghost"
                     onClick={() => handleRemoveItem(item.id)}
                     className="ml-4"
-                    aria-title={`Remove ${item.title} from cart`}
+                    aria-label={`Remove ${item.title} from cart`}
                   >
                     <X />
                   </Button>

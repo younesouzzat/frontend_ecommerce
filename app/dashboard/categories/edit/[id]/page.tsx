@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -11,7 +11,7 @@ import { Loader2, ChartColumnStacked } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-hot-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -23,7 +23,6 @@ import {
 } from "@/redux/services/admin/categories";
 import { routes } from "@/utils/routes";
 import { MESSAGES } from "@/constants/messages";
-import { MultiSelect } from "@/components/ui/multi-select";
 
 type FormData = {
   name: string;
@@ -80,7 +79,7 @@ const EditCategoriePage = () => {
         toast.success(response.message);
         router.push(routes.adminCategories);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Update Category Error:", error);
   
       const errorMessage = error?.data?.errors?.name?.[0] || MESSAGES.FAILED.UPDATE_FAILED;

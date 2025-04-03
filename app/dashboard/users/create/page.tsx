@@ -25,7 +25,7 @@ import { MultiSelect } from "@/components/ui/multi-select";
 type FormData = {
   name: string;
   email: string;
-  status: string;
+  status: boolean;
   password: string;
   roles: string[];
 };
@@ -46,7 +46,7 @@ const CreateUserPage = () => {
     { value: string; label: string }[]
   >([]);
 
-  const { data: respData, isLoading: isLoadingRoles } = useGetRolesQuery();
+  const { data: respData } = useGetRolesQuery(undefined);
   const [createUser, { isLoading }] = useCreateUserMutation();
 
   const generatePassword = () => {
@@ -93,10 +93,10 @@ const CreateUserPage = () => {
     setAvailableRoles(allRoles);
   }, [respData]);
 
-  const onSubmit: SubmitHandler<FormData> = async (data) => {
+  const onSubmit: SubmitHandler<FormData> = async (data: any) => {
     const loadingToast = toast.loading(MESSAGES.OPERATION.CREATE);
     try {
-      const createdRoles = data.roles.map((roleName) => ({
+      const createdRoles = data.roles.map((roleName: any) => ({
         id: respData?.all_roles[roleName],
         name: roleName,
       }));

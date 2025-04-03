@@ -38,7 +38,6 @@ const FileUpload: React.FC<FileUploadProps> = ({
   imagesToKeep
 }) => {
   const [files, setFiles] = useState<FileWithPreview[]>([]);
-  const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
     const existingImages =
@@ -54,19 +53,20 @@ const FileUpload: React.FC<FileUploadProps> = ({
     }));
 
     setFiles(newFiles);
-  }, [existingFiles.join(","), existingCover, isCover]);
+  }, [existingFiles, existingCover, isCover]);
+  // }, [existingFiles.join(","), existingCover, isCover]);
 
-  const validateFile = (file: File) => {
-    if (!file.type.startsWith("image/")) {
-      throw new Error(`${file.name} is not an image file`);
-    }
+  // const validateFile = (file: File) => {
+  //   if (!file.type.startsWith("image/")) {
+  //     throw new Error(`${file.name} is not an image file`);
+  //   }
 
-    if (file.size > maxSize) {
-      throw new Error(`${file.name} is larger than ${maxSize / 1024 / 1024}MB`);
-    }
+  //   if (file.size > maxSize) {
+  //     throw new Error(`${file.name} is larger than ${maxSize / 1024 / 1024}MB`);
+  //   }
 
-    return true;
-  };
+  //   return true;
+  // };
 
   const onDrop = useCallback(
     (acceptedFiles: File[], rejectedFiles: any[]) => {
@@ -92,6 +92,18 @@ const FileUpload: React.FC<FileUploadProps> = ({
       const newFilesCount = acceptedFiles.length;
       const existingFilesCount = files.filter((f) => f.isExisting).length;
       const currentNewFilesCount = files.filter((f) => !f.isExisting).length;
+
+      const validateFile = (file: File) => {
+        if (!file.type.startsWith("image/")) {
+          throw new Error(`${file.name} is not an image file`);
+        }
+    
+        if (file.size > maxSize) {
+          throw new Error(`${file.name} is larger than ${maxSize / 1024 / 1024}MB`);
+        }
+    
+        return true;
+      };
 
       // For cover image, only allow one file
       if (isCover && newFilesCount > 0) {

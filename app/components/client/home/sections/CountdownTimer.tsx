@@ -13,7 +13,7 @@ export default function CountdownTimer({ targetDate }: CountdownTimerProps) {
   const [seconds, setSeconds] = useState(0);
 
   useEffect(() => {
-    const targetDateObj = new Date(targetDate);
+    const targetDateObj = new Date(targetDate) as any;
 
     if (isNaN(targetDateObj.getTime())) {
       console.error("Invalid target date:", targetDate);
@@ -21,7 +21,7 @@ export default function CountdownTimer({ targetDate }: CountdownTimerProps) {
     }
 
     const interval = setInterval(() => {
-      const now = new Date();
+      const now = new Date() as any;
       const timeRemaining = targetDateObj - now;
 
       if (timeRemaining <= 0) {

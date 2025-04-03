@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   toggleWishlist,
@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/tooltip";
 import {
   Card,
-  CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -28,12 +27,8 @@ import toast from "react-hot-toast";
 import { useCartSheet } from "@/app/context/CartSheetContext";
 import Link from "next/link";
 import { routes } from "@/utils/routes";
-import { Product } from "@/types";
+import { CartItem, ShopProdCardProps } from "@/types";
 import { RootState } from "@/redux/stores/store";
-
-interface ShopProdCardProps {
-  product: Product;
-}
 
 export default function ShopProdCard({ product }: ShopProdCardProps) {
   const dispatch = useDispatch();
@@ -42,34 +37,34 @@ export default function ShopProdCard({ product }: ShopProdCardProps) {
     (state: RootState) => state.global
   );
 
-  const handleQuickView = (product: Product) => {
+  const handleQuickView = (product: CartItem) => {
     dispatch(setQuickView(product));
   };
 
-  const handleWishlist = (product: number) => {
+  const handleWishlist = (product: CartItem) => {
     dispatch(toggleWishlist(product));
-    const isAdding = !wishlist.some((item) => item.id === product.id);
+    const isAdding = !wishlist.some((item: any) => item.id === product.id);
     toast.success(
       isAdding ? "Added to your wishlist" : "Removed from your wishlist"
     );
   };
 
-  const handleCompare = (product: Product) => {
+  const handleCompare = (product: CartItem) => {
     dispatch(toggleCompare(product));
-    const isAdding = !compareList.some((item) => item.id === product.id);
+    const isAdding = !compareList.some((item: any) => item.id === product.id);
     toast.success(
       isAdding ? "Added to comparison list" : "Removed from comparison list"
     );
   };
 
-  const handleAddToCart = (product: Product) => {
+  const handleAddToCart = (product: CartItem) => {
     dispatch(addToCart({ product }));
     toast.success("Product added to cart!");
     openSheet("cart");
   };
 
-  const isInCompare = compareList.some((item) => item.id === product.id);
-  const isInWishlist = wishlist.some((item) => item.id === product.id);
+  const isInCompare = compareList.some((item: any) => item.id === product.id);
+  const isInWishlist = wishlist.some((item: any) => item.id === product.id);
 
   return (
     <div>

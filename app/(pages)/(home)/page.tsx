@@ -68,11 +68,6 @@ const SectionWrapper: React.FC<SectionWrapperProps> = ({ children, name }) => (
   </ErrorBoundary>
 );
 
-interface ApiResponse {
-  products: Product[];
-  categories: Category[];
-}
-
 export default function Home() {
   const {
     data: responseData,
@@ -80,10 +75,10 @@ export default function Home() {
     isError,
     error,
     refetch
-  } = useGetProductsWithCategoryQuery<ApiResponse>();
+  } = useGetProductsWithCategoryQuery();
 
   const [products, setProducts] = useState<Product[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
     if (responseData) {
@@ -96,9 +91,9 @@ export default function Home() {
     return (
       <div className="container mx-auto py-16 text-center">
         <h2 className="text-2xl font-bold text-red-600 mb-4">Failed to load page content</h2>
-        <p className="text-gray-600 mb-6">{error?.message || "There was an error loading the page content"}</p>
+        <p className="text-gray-600 mb-6">{(error as Error)?.message || "There was an error loading the page content"}</p>
         <button 
-          onClick={refetch} 
+          onClick={() => refetch()} 
           className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
         >
           Retry

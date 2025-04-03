@@ -39,7 +39,8 @@ const FacebookLoginButton = () => {
       <FacebookLogin
         appId="981645750761610"
         onSuccess={onSuccessHandler}
-        onFail={(error) => {
+        onFail={(error: any) => {
+          console.log(error);
           setMessage({ text: "Error occured", severity: "error" });
         }}
         render={({ onClick }) => (

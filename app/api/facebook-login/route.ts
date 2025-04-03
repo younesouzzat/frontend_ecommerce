@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Social login error:", error);
     return new Response(
       JSON.stringify({

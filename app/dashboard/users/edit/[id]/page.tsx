@@ -11,7 +11,7 @@ import { Loader2, Users, Copy, KeyRound, Eraser } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-hot-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -60,7 +60,7 @@ const EditUserPage = () => {
   const generatePassword = () => {
     const charset =
       "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+";
-    let newPassword = Array.from(
+    const newPassword = Array.from(
       crypto.getRandomValues(new Uint32Array(16)),
       (x) => charset[x % charset.length]
     ).join("");
@@ -140,7 +140,8 @@ const EditUserPage = () => {
         toast.success(response.message);
         router.push(routes.adminUsers);
       }
-    } catch (error) {
+    } catch (error: any) {
+      console.error(error);
       toast.error(MESSAGES.FAILED.UPDATE_FAILED);
     }
   };

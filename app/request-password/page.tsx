@@ -1,5 +1,4 @@
-import { GalleryVerticalEnd, Link } from "lucide-react"
-
+import { Link } from "lucide-react"
 import { RequestPWDForm } from "@/components/req-password-form"
 
 export default function RequestPasswordPage() {

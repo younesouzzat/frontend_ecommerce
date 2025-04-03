@@ -7,7 +7,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -85,10 +84,9 @@ export const columns = (refetch: () => void): ColumnDef<User>[] => [
     header: "Roles",
     cell: ({ row }) => (
       <div className="flex space-x-2">
-        {row.original.roles.map((role: { name: string }) => (
-          <Badge key={role.name}>
-            {role.name}
-          </Badge>
+        {/* {row.original.roles.map((role: { name: string }) => ( */}
+        {row.original.roles.map((role: any) => (
+          <Badge key={role.name}>{role.name}</Badge>
         ))}
       </div>
     ),

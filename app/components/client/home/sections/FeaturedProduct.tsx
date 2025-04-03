@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import SecondTabNavigation from "./SecondTabNavigation";
-import { FeaturedProductProps, Product } from "@/types";
+import { FeaturedProductProps } from "@/types";
 
 import { type CarouselApi } from "@/components/ui/carousel";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
@@ -14,7 +14,7 @@ const FeaturedProduct: React.FC<FeaturedProductProps> = ({
   isLoading,
 }) => {
   const [api, setApi] = useState<CarouselApi>();
-  const [current, setCurrent] = useState(0);
+  const [_current, setCurrent] = useState<any>();
 
   useEffect(() => {
     if (!api) return;

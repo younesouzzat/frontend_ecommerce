@@ -23,7 +23,7 @@ export default function ContactPage() {
     resolver: zodResolver(contactSchema),
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = (data: any) => {
     console.log("Form Submitted", data);
   };
 
@@ -69,9 +69,9 @@ export default function ContactPage() {
                     {...register("name")}
                     placeholder="Enter your name"
                   />
-                  {errors.name && (
+                  {errors.name?.message && (
                     <p className="text-red-500 text-sm">
-                      {errors.name.message}
+                      {String(errors.name.message)}
                     </p>
                   )}
                 </div>
@@ -83,9 +83,9 @@ export default function ContactPage() {
                     type="email"
                     placeholder="Enter your email"
                   />
-                  {errors.email && (
+                  {errors.email?.message && (
                     <p className="text-red-500 text-sm">
-                      {errors.email.message}
+                      {String(errors.email.message)}
                     </p>
                   )}
                 </div>
@@ -98,9 +98,9 @@ export default function ContactPage() {
                     placeholder="Enter your message"
                     rows={4}
                   ></textarea>
-                  {errors.message && (
+                  {errors.message?.message && (
                     <p className="text-red-500 text-sm">
-                      {errors.message.message}
+                      {String(errors.message.message)}
                     </p>
                   )}
                 </div>
@@ -120,7 +120,6 @@ export default function ContactPage() {
             width="100%"
             height="100%"
             style={{ border: 0 }}
-            allowFullScreen=""
             loading="lazy"
             title="Location Map"
           ></iframe>

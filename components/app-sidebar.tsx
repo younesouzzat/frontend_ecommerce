@@ -11,16 +11,15 @@ import {
 
 import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
-import { TeamSwitcher } from "@/components/team-switcher"
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
 import { AuthContext } from "@/redux/stores/AuthProvider"
 import { routes } from "../utils/routes";
+import { User, AuthContextType } from "@/types";
 
 // This is sample data.
 const data = {
@@ -87,19 +86,10 @@ const data = {
   ]
 }
 
-interface User {
-  token: string;
-  name: string;
-  email: string;
-}
-
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { user } = React.useContext(AuthContext);
+  const { user } = React.useContext(AuthContext) as AuthContextType;
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
-      </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
       </SidebarContent>

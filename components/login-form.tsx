@@ -13,7 +13,6 @@ import { Label } from "@/components/ui/label";
 import { useLoginMutation } from "@/redux/services/auth";
 import Link from "next/link";
 import { setCookie } from "cookies-next";
-import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -33,9 +32,9 @@ export function LoginForm({
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
   const [login, { isLoading }] = useLoginMutation();
-  const searchParams = useSearchParams();
-  const code = searchParams.get("code");
-  const router = useRouter();
+  // const searchParams = useSearchParams();
+  // const code = searchParams.get("code");
+  // const router = useRouter();
 
   const {
     register,

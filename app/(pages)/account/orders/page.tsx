@@ -15,23 +15,14 @@ import { useGetOrderByIdQuery } from "@/redux/services/client/orders";
 import { useAuthContext } from "@/redux/stores/AuthProvider";
 import { Button } from "@/components/ui/button";
 
-// Define types for orders data
-interface Order {
-  id: string;
-  code: string;
-  date: string;
-  status: number;
-  total: number;
-}
-
-const UserOrderPage = () => {
+export default function UserOrderPage () {
   const router = useRouter();
   const { user } = useAuthContext();
   const [page, setPage] = useState(1);
   const perPage = 5;
 
   const { data: ordersData, isLoading: isLoadingOrders } = useGetOrderByIdQuery(
-    { userId: user?.id, page, perPage },
+    { userId: user?.id?.toString() || "", page, perPage },
     {
       refetchOnMountOrArgChange: true,
       refetchOnFocus: true,
@@ -57,13 +48,13 @@ const UserOrderPage = () => {
 
   const renderStatusBadge = (status: number) => {
     switch (status) {
-      case "0":
+      case 0:
         return (
           <span className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs">
             Processing
           </span>
         );
-      case "1":
+      case 1:
         return (
           <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs">
             Delivered
@@ -108,7 +99,7 @@ const UserOrderPage = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {orders.map((item) => (
+                  {orders.map((item: any) => (
                     <TableRow key={item.id}>
                       <TableCell>{item.code}</TableCell>
                       <TableCell>{renderStatusBadge(item.status)}</TableCell>
@@ -166,5 +157,3 @@ const UserOrderPage = () => {
     </div>
   );
 };
-
-export default UserOrderPage;

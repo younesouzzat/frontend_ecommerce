@@ -57,12 +57,11 @@ const UpdateOrderPage = () => {
 
   const [
     fetchInvoice,
-    { data: invoiceData, isLoading: isLoadingInvoice, error: invoiceError },
+    { data: invoiceData, isLoading: isLoadingInvoice},
   ] = useLazyFetchInvoiceQuery();
 
   const {
     handleSubmit,
-    reset,
     setValue,
     watch,
     formState: { errors },
@@ -90,7 +89,8 @@ const UpdateOrderPage = () => {
     }
   }, [orderData, setValue]);
 
-  const onSubmit = async (data: FormData) => {
+  // const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: any) => {
     const loadingToast = toast.loading(MESSAGES.OPERATION.UPDATE);
     try {
       const formData = new FormData();
@@ -143,7 +143,7 @@ const UpdateOrderPage = () => {
       link.click();
       document.body.removeChild(link);
       toast.success("Invoice download started");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Download error:", error);
       toast.error("Failed to download invoice");
     }
@@ -157,7 +157,7 @@ const UpdateOrderPage = () => {
     );
   }
 
-  const renderOrderDetails = (item) => {
+  const renderOrderDetails = (item: any) => {
     const productTitle = item.products_info?.[0]?.titre || "Unknown Product";
     const quantity = item.qte || "N/A";
     const priceUnit = item.price_unit

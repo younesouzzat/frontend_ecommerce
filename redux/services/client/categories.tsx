@@ -1,19 +1,20 @@
+import { CategoryProps } from "@/types";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const clientCategoriesApi = createApi({
-  reducerPath: "clientCategoriesApi",
+  reducerPath: 'clientCategoriesApi',
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_URL,
-    credentials: "include",
+    credentials: 'include',
   }),
   endpoints: (builder) => ({
-    getCategories: builder.query({
+    getCategories: builder.query<CategoryProps[], void>({
       query: () => `list-categories`,
-      keepUnusedDataFor: 0,
     }),
   }),
 });
 
 export const {
-  useGetCategoriesQuery
+  useGetCategoriesQuery,
 } = clientCategoriesApi;
+

@@ -11,14 +11,18 @@ import { routes } from "@/utils/routes";
 import Link from "next/link";
 import { MESSAGES } from "@/constants/messages";
 
+interface RolesResponse {
+  roles: Role[];
+}
+
 export default function RolesPage() {
-  const { data, isLoading, isError, refetch } = useGetRolesQuery<Role[]>({
+  const { data, isLoading, isError, refetch } = useGetRolesQuery(undefined, {
     refetchOnMountOrArgChange: true,
     refetchOnFocus: true,
     refetchOnReconnect: true,
   });
 
-  const roles = data?.roles || [];
+  const roles = (data as RolesResponse)?.roles || [];
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 pt-0">

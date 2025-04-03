@@ -1,7 +1,7 @@
 import { Bold, Italic, List, ListOrdered, Quote } from "lucide-react";
 import { Button } from "./ui/button";
 
-export default function TextEditorBar({ editor }) {
+export default function TextEditorBar({ editor }: any) {
   if (!editor) {
     return null;
   }

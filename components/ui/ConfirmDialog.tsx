@@ -11,7 +11,7 @@ type ConfirmDialogProps = {
   onCancel?: () => void;
 };
 
-export const ConfirmDialog = ({ title, message, onConfirm, onCancel }: ConfirmDialogProps) => {
+export const ConfirmDialog = ({ title, message, onConfirm }: ConfirmDialogProps) => {
   const [open, setOpen] = useState(false);
 
   const handleConfirm = () => {

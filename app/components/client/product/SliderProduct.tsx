@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 
-export default function SliderProduct({ product }) {
+export default function SliderProduct({ product }: any) {
   const [activeIndex, setActiveIndex] = useState(0);
   return (
     <div className="w-full md:w-1/2">

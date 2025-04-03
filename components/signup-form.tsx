@@ -6,14 +6,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { setCookie } from "cookies-next";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
 import { useSignupMutation } from "@/redux/services/auth";
 import toast from "react-hot-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import Socialite from "./Socialite";
 import { routes } from "@/utils/routes";
+import { useForm } from "react-hook-form";
 
 const signupSchema = z
   .object({
@@ -28,7 +27,7 @@ const signupSchema = z
       .min(1, "Password is required"),
     confirm_password: z.string().min(1, "Please confirm your password"),
   })
-  .refine((data) => data.password === data.confirm_password, {
+  .refine((data: any) => data.password === data.confirm_password, {
     message: "Passwords don't match",
     path: ["confirm_password"],
   });
@@ -39,9 +38,8 @@ export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const [signup, { isLoading, isSuccess, isError, error }] =
+  const [signup, { isLoading }] =
     useSignupMutation();
-  const router = useRouter();
 
   const {
     register,
@@ -77,16 +75,16 @@ export function SignupForm({
             }),
             {
               path: process.env.COOKIE_PATH || "/",
-              maxAge: parseInt(process.env.COOKIE_MAX_AGE) || 604800,
+              maxAge: parseInt(process.env.COOKIE_MAX_AGE as any) || 604800,
               httpOnly: process.env.COOKIE_HTTP_ONLY === "true",
               secure: process.env.COOKIE_SECURE === "true",
-              sameSite: process.env.COOKIE_SAME_SITE || "strict",
+              sameSite: (process.env.COOKIE_SAME_SITE || "strict") as "strict" | "lax" | "none",
             }
           );
           window.location.href = routes.home;
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Signup failed:", error);
 
       toast.dismiss(loadingToast);

@@ -29,22 +29,12 @@ import { useLogoutMutation } from "@/redux/services/auth";
 import { deleteCookie } from "cookies-next";
 import { ThemeToggle } from "./ThemeToggle";
 import toast from "react-hot-toast";
+import { AuthContextType, User } from "@/types";
 
-interface User {
-  name: string;
-  email: string;
-  token: string;
-  displayname: string;
-}
-
-interface NavUserProps {
-  user: User;
-}
-
-export function NavUser({ user }: NavUserProps) {
+export function NavUser({ user }: AuthContextType) {
   const { isMobile } = useSidebar();
   const router = useRouter();
-  const [logout, { isLoading, isSuccess, isError }] = useLogoutMutation();
+  const [logout, { isLoading }] = useLogoutMutation();
 
   const onLogout = async (token: User) => {
     try {
@@ -57,7 +47,7 @@ export function NavUser({ user }: NavUserProps) {
         toast.success("Logged out successfully!");
         router.push("/login");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Logout failed:", error);
       toast.error("Logout failed. Please try again.");
     }
@@ -73,7 +63,7 @@ export function NavUser({ user }: NavUserProps) {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={""} alt={user?.name} />
+                <AvatarImage src={""} alt={user?.name as any} />
                 <AvatarFallback className="rounded-lg">{user?.displayname}</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
@@ -92,7 +82,7 @@ export function NavUser({ user }: NavUserProps) {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={""} alt={user?.name} />
+                  <AvatarImage src={""} alt={user?.name as any} />
                   <AvatarFallback className="rounded-lg">{user?.displayname}</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
@@ -120,7 +110,7 @@ export function NavUser({ user }: NavUserProps) {
               className="cursor-pointer"
               disabled={isLoading}
               onClick={() => {
-                onLogout(user?.token);
+                onLogout(user?.token as any);
               }}
             >
               <LogOut />

@@ -7,9 +7,9 @@ import {
 } from "@/components/ui/carousel";
 import CardProd from "./CardProd";
 import { Skeleton } from "@/components/ui/skeleton";
-import { FeaturedProductProps } from "@/types";
+import { SingleProductProps } from "@/types";
 
-const SingleProductCarousel: React.FC<FeaturedProductProps> = ({
+const SingleProductCarousel: React.FC<SingleProductProps> = ({
   items,
   setApi,
   isLoading,
@@ -28,7 +28,7 @@ const SingleProductCarousel: React.FC<FeaturedProductProps> = ({
                 </div>
               </CarouselItem>
             ))
-          : items.map((item) => (
+          : items.map((item: any) => (
               <CarouselItem className="relative" key={item.id}>
                 <div className="p-1">
                   <CardProd item={item} isLoading={isLoading} />

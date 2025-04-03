@@ -21,7 +21,7 @@ export default function CompareList() {
                 Compare Products ({compareList.length}/4):
               </span>
               <div className="flex gap-2">
-                {compareList.map((product) => (
+                {compareList.map((product : any) => (
                   <div key={product.id} className="relative">
                     <Image
                       src={product.image}

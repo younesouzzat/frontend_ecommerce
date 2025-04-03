@@ -3,9 +3,8 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from "@/components/ui/card";
-import { Activity, CreditCard, DollarSign, User, Users } from "lucide-react";
+import { Activity, CreditCard, DollarSign, Users } from "lucide-react";
 
 export default function CardsCounts() {
   return (

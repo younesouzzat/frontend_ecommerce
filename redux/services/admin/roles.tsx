@@ -1,3 +1,4 @@
+import { Roles } from "@/types";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const getAuthToken = () => {
@@ -10,7 +11,7 @@ const getAuthToken = () => {
     try {
       const roleData = JSON.parse(decodeURIComponent(cookie));
       return roleData?.token || null;
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error parsing auth token:", error);
       return null;
     }
@@ -33,7 +34,7 @@ export const adminRolesApi = createApi({
   }),
   tagTypes: ['Roles', 'Role'],
   endpoints: (builder) => ({
-    getRoles: builder.query({
+    getRoles: builder.query<Roles, void>({
       query: () => "all-roles",
       keepUnusedDataFor: 0,
     }),

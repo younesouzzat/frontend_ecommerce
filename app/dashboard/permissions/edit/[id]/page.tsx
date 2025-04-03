@@ -22,6 +22,7 @@ import {
 } from "@/redux/services/admin/permissions";
 import { Label } from "@/components/ui/label";
 import toast from "react-hot-toast";
+import { Permission } from "@/types";
 
 const rolePermissionSchema = z.object({
   permissions: z
@@ -59,7 +60,7 @@ const RolePermissionsPage = () => {
     }
   }, [permission, reset]);
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: any) => {
     const loadingToast = toast.loading(MESSAGES.OPERATION.CREATE);
     try {
       const response = await assignPermissions({
@@ -72,7 +73,7 @@ const RolePermissionsPage = () => {
         toast.success(response.message);
         router.push(routes.adminRoles);
       }
-    } catch (error) {
+    } catch (error: any) {
       toast.dismiss(loadingToast);
       if (error?.status === 422 && error?.data?.errors) {
         Object.keys(error.data.errors).forEach((key) => {
@@ -106,13 +107,13 @@ const RolePermissionsPage = () => {
                   <Loader2 className="w-6 h-6 animate-spin" />
                 </div>
               ) : (
-                permission?.res_data?.permissions?.map((group, index) => (
+                permission?.res_data?.permissions?.map((group : any , index : any) => (
                   <div key={index} className="space-y-4">
                     <Label className="font-bold text-base">
                       {group.parent}
                     </Label>
                     <ul className="flex flex-col items-start space-y-3">
-                      {group.permissions.map((perm) => (
+                      {group.permissions.map((perm: Permission) => (
                         <li
                           className="flex items-center space-x-2"
                           key={perm.id}
@@ -120,14 +121,14 @@ const RolePermissionsPage = () => {
                           <Controller
                             name="permissions"
                             control={control}
-                            render={({ field }) => (
+                            render={({ field }: any) => (
                               <Checkbox
                                 id={`permission_${perm.id}`}
                                 checked={field.value.includes(perm.id)}
                                 onCheckedChange={(checked) => {
                                   const newValue = checked
                                     ? [...field.value, perm.id]
-                                    : field.value.filter((p) => p !== perm.id);
+                                    : field.value.filter((p: any) => p !== perm.id);
                                   field.onChange(newValue);
                                 }}
                               />

@@ -2,19 +2,7 @@
 
 import { ReactNode, createContext, useContext, useEffect, useState, useCallback } from "react";
 import { getCookie } from "cookies-next";
-
-export interface User {
-  id: number | null;
-  name: string | null;
-  token: string | null;
-  email: string | null;
-  displayname: string | null;
-}
-
-interface AuthContextType {
-  user: User;
-  isLoading: boolean;
-}
+import { User, AuthContextType } from "@/types";
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
@@ -66,7 +54,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             .map((word: string) => word.charAt(0))
             .join("") || null,
         });
-      } catch (error) {
+      } catch (error: any) {
         console.error("Failed to initialize auth:", error);
         resetUserData();
       } finally {

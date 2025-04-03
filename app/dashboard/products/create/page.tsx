@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -87,7 +87,7 @@ const CreateProductPage = () => {
   const [productImages, setProductImages] = useState<File[]>([]);
 
   const { data: categories, isLoading: isLoadingCategory } =
-    useGetAllCategoriesQuery();
+  useGetAllCategoriesQuery(undefined);
 
   const handleCoverUpload = (files: File[]) => {
     setCoverFile(files[0] || null);
@@ -135,7 +135,7 @@ const CreateProductPage = () => {
   const is_active = watch("is_active");
   const is_promotion = watch("is_promotion");
 
-  const onSubmit: SubmitHandler<FormData> = async (data) => {
+  const onSubmit: SubmitHandler<FormData> = async (data: any) => {
     const loadingToast = toast.loading(MESSAGES.OPERATION.CREATE);
     try {
       const formData = new FormData();
@@ -309,7 +309,7 @@ const CreateProductPage = () => {
                       <SelectTrigger>
                         <SelectValue placeholder="Select category">
                           {categories?.find(
-                            (cat) =>
+                            (cat: any) =>
                               cat.id.toString() ===
                               watch("category")?.toString()
                           )?.name || "Select category"}
@@ -321,7 +321,7 @@ const CreateProductPage = () => {
                             <Loader2 className="h-5 w-5 animate-spin" />
                           </div>
                         ) : categories?.length ? (
-                          categories.map((category) => (
+                          categories.map((category: any) => (
                             <SelectItem
                               className="cursor-pointer"
                               key={category.id}

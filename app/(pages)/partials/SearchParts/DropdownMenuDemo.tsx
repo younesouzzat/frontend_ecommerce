@@ -1,7 +1,5 @@
-"use client";
 import React, { useState } from "react";
 import { List, ChevronDown } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,16 +10,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { routes } from "@/utils/routes";
-import { useRouter } from "next/navigation";
-import { CategoryProps } from "@/types";
+import { CategoryItems } from "@/types";
 
-const DropdownMenuDemo: React.FC<CategoryProps> = ({
-  categories,
-  isLoading,
-}) => {
+interface DropdownMenuDemoProps {
+  categories: CategoryItems[];
+  isLoading: boolean;
+}
+
+const DropdownMenuDemo: React.FC<DropdownMenuDemoProps> = ({ categories, isLoading }) => {
   const [expandedSubMenu, setExpandedSubMenu] = useState<string | null>(null);
-  const router = useRouter();
-
   const toggleSubMenu = (name: string) => {
     setExpandedSubMenu(expandedSubMenu === name ? null : name);
   };
@@ -56,16 +53,22 @@ const DropdownMenuDemo: React.FC<CategoryProps> = ({
           <DropdownMenuGroup>
             <DropdownMenuSub></DropdownMenuSub>
             <DropdownMenuSubTrigger>
-            <span>No data</span>
+              <span>Loading...</span>
+            </DropdownMenuSubTrigger>
+          </DropdownMenuGroup>
+        ) : categories && categories.length === 0 ? (
+          <DropdownMenuGroup>
+            <DropdownMenuSub></DropdownMenuSub>
+            <DropdownMenuSubTrigger>
+              <span>No categories available</span>
             </DropdownMenuSubTrigger>
           </DropdownMenuGroup>
         ) : (
-          categories &&
-          categories?.map((category: any) => (
+          categories && categories.map((category: any) => (
             <DropdownMenuGroup key={`dm${category.id}`}>
               <DropdownMenuSub>
                 <DropdownMenuSubTrigger
-                  onMouseEnter={() => setExpandedSubMenu(category.id)}
+                  onMouseEnter={() => setExpandedSubMenu(category.id.toString())}
                   onMouseLeave={() => setExpandedSubMenu(null)}
                   onClick={() => handleCategorySearch(category.name)}
                   className="flex items-center space-x-2 px-2 py-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer"

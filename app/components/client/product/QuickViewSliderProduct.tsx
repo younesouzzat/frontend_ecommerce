@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 
-export default function QuickViewSliderProduct({ product }) {
+export default function QuickViewSliderProduct({ product } : any) {
   const [activeIndex, setActiveIndex] = useState(0);
   return (
     <div className="w-full">

@@ -10,7 +10,7 @@ const getAuthToken = () => {
     try {
       const permissionData = JSON.parse(decodeURIComponent(cookie));
       return permissionData?.token || null;
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error parsing auth token:", error);
       return null;
     }
