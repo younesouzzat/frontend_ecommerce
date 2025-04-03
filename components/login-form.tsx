@@ -32,9 +32,6 @@ export function LoginForm({
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
   const [login, { isLoading }] = useLoginMutation();
-  // const searchParams = useSearchParams();
-  // const code = searchParams.get("code");
-  // const router = useRouter();
 
   const {
     register,

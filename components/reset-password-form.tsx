@@ -19,6 +19,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Suspense, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { SearchParamsWrapper } from "./SearchParamsWrapper";
 
 const resetSchema = z
   .object({
@@ -39,8 +40,7 @@ export function ResetPWDForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
-  const [resetpwd, { isLoading }] =
-  useResetpwdMutation();
+  const [resetpwd, { isLoading }] = useResetpwdMutation();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -78,15 +78,14 @@ export function ResetPWDForm({
         confirm_password: data.confirm_password,
       }).unwrap();
 
-      if(response.success) {
+      if (response.success) {
         toast.dismiss(loadingToast);
         toast.success("Password reset successfully!");
-  
+
         setTimeout(() => {
           router.push("/login");
         }, 2000);
       }
-
     } catch (error: any) {
       console.error("Password reset request failed:", error);
 
@@ -98,60 +97,69 @@ export function ResetPWDForm({
   };
 
   return (
-    <Suspense fallback={<>Loading...</>}>
-      <div className={cn("flex flex-col gap-6", className)} {...props}>
-        <Card>
-          <CardHeader className="text-center">
-            <CardTitle className="text-xl">Reset Your Password</CardTitle>
-            <CardDescription>
-              Please enter your new password and confirm it.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-6">
-              <form onSubmit={handleSubmit(onSubmit)} noValidate>
-                <div className="grid gap-6">
-                  <div className="grid gap-2">
-                    <Label htmlFor="password">New Password</Label>
-                    <Input
-                      id="password"
-                      type="password"
-                      {...register("password")}
-                    />
-                    {errors.password && (
-                      <span className="text-red-500">
-                        {errors.password.message}
-                      </span>
-                    )}
+    <div className={cn("flex flex-col gap-6", className)} {...props}>
+      <SearchParamsWrapper>
+        {(searchParams) => (
+          <Card>
+            <CardHeader className="text-center">
+              <CardTitle className="text-xl">Reset Your Password</CardTitle>
+              <CardDescription>
+                Please enter your new password and confirm it.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-6">
+                <form onSubmit={handleSubmit(onSubmit)} noValidate>
+                  <div className="grid gap-6">
+                    <div className="grid gap-2">
+                      <Label htmlFor="password">New Password</Label>
+                      <Input
+                        id="password"
+                        type="password"
+                        {...register("password")}
+                      />
+                      {errors.password && (
+                        <span className="text-red-500">
+                          {errors.password.message}
+                        </span>
+                      )}
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="confirm_password">Confirm Password</Label>
+                      <Input
+                        id="confirm_password"
+                        type="password"
+                        {...register("confirm_password")}
+                      />
+                      {errors.confirm_password && (
+                        <span className="text-red-500">
+                          {errors.confirm_password.message}
+                        </span>
+                      )}
+                    </div>
+                    <Button
+                      type="submit"
+                      className="w-full"
+                      disabled={isLoading}
+                    >
+                      {isLoading ? "Sending..." : "Submit"}
+                    </Button>
                   </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="confirm_password">Confirm Password</Label>
-                    <Input
-                      id="confirm_password"
-                      type="password"
-                      {...register("confirm_password")}
-                    />
-                    {errors.confirm_password && (
-                      <span className="text-red-500">
-                        {errors.confirm_password.message}
-                      </span>
-                    )}
+                  <div className="text-center text-sm">
+                    Go back to login ?{" "}
+                    <Link
+                      href="/login"
+                      className="underline underline-offset-4"
+                    >
+                      Sign in
+                    </Link>
                   </div>
-                  <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading ? "Sending..." : "Submit"}
-                  </Button>
-                </div>
-                <div className="text-center text-sm">
-                  Go back to login ?{" "}
-                  <Link href="/login" className="underline underline-offset-4">
-                    Sign in
-                  </Link>
-                </div>
-              </form>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </Suspense>
+                </form>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+      </SearchParamsWrapper>
+    </div>
   );
 }

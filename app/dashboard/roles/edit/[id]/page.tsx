@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { Suspense, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -84,69 +84,71 @@ const EditRolePage = () => {
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 md:p-6 pt-0">
-      <Card className="rounded-xl border bg-card text-card-foreground shadow-lg">
-        <CardHeader className="p-6 border-b">
-          <div className="flex items-center space-x-3">
-            <div className="p-2 bg-primary/10 rounded-lg">
-              <Shield className="w-5 h-5 text-primary" />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Card className="rounded-xl border bg-card text-card-foreground shadow-lg">
+          <CardHeader className="p-6 border-b">
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-primary/10 rounded-lg">
+                <Shield className="w-5 h-5 text-primary" />
+              </div>
+              <CardTitle className="text-primary">Edit Role</CardTitle>
             </div>
-            <CardTitle className="text-primary">Edit Role</CardTitle>
-          </div>
-        </CardHeader>
+          </CardHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <CardContent className="p-6">
-            <div className="grid gap-8 md:grid-cols-2">
-              {isLoadingRole ? (
-                <div className="flex items-center justify-center col-span-2">
-                  <Loader2 className="w-6 h-6 animate-spin" />
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="name" className="text-sm font-medium">
-                      Role Name
-                    </Label>
-                    <Input
-                      id="name"
-                      type="text"
-                      placeholder="Enter role's name"
-                      className="mt-1.5"
-                      {...register("name")}
-                    />
-                    {errors.name && (
-                      <span className="text-red-500 text-sm mt-1">
-                        {errors.name.message}
-                      </span>
-                    )}
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <CardContent className="p-6">
+              <div className="grid gap-8 md:grid-cols-2">
+                {isLoadingRole ? (
+                  <div className="flex items-center justify-center col-span-2">
+                    <Loader2 className="w-6 h-6 animate-spin" />
                   </div>
-                </div>
-              )}
-            </div>
-          </CardContent>
-
-          <CardFooter className="p-6 border-t">
-            <div className="flex gap-3">
-              <Button type="submit" disabled={isLoading} className="px-8">
-                {isLoading ? (
-                  <>
-                    {MESSAGES.OPERATION.UPDATE}
-                  </>
                 ) : (
-                  "Update Role"
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="name" className="text-sm font-medium">
+                        Role Name
+                      </Label>
+                      <Input
+                        id="name"
+                        type="text"
+                        placeholder="Enter role's name"
+                        className="mt-1.5"
+                        {...register("name")}
+                      />
+                      {errors.name && (
+                        <span className="text-red-500 text-sm mt-1">
+                          {errors.name.message}
+                        </span>
+                      )}
+                    </div>
+                  </div>
                 )}
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => router.push(routes.adminRoles)}
-              >
-                Cancel
-              </Button>
-            </div>
-          </CardFooter>
-        </form>
-      </Card>
+              </div>
+            </CardContent>
+
+            <CardFooter className="p-6 border-t">
+              <div className="flex gap-3">
+                <Button type="submit" disabled={isLoading} className="px-8">
+                  {isLoading ? (
+                    <>
+                      {MESSAGES.OPERATION.UPDATE}
+                    </>
+                  ) : (
+                    "Update Role"
+                  )}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => router.push(routes.adminRoles)}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </CardFooter>
+          </form>
+        </Card>
+      </Suspense>
     </div>
   );
 };

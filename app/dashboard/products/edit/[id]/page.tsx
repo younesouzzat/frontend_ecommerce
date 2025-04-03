@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -254,340 +254,342 @@ const UpdateProductPage = () => {
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 md:p-6 pt-0">
-      <Card className="rounded-xl border bg-card text-card-foreground shadow-lg">
-        <CardHeader className="p-6 border-b">
-          <div className="flex items-center space-x-3">
-            <div className="p-2 bg-primary/10 rounded-lg">
-              <ShoppingCart className="w-5 h-5 text-primary" />
-            </div>
-            <CardTitle className="text-primary">Update Product</CardTitle>
-          </div>
-        </CardHeader>
-
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <CardContent className="p-6">
-            <div className="grid gap-8 md:grid-cols-2">
-              {/* Basic Information */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Basic Information</h3>
-
-                <div>
-                  <Label htmlFor="title">Title</Label>
-                  <Input
-                    id="title"
-                    type="text"
-                    placeholder="Enter product title"
-                    className="mt-1.5"
-                    {...register("title")}
-                  />
-                  {errors.title && (
-                    <span className="text-red-500 text-sm mt-1">
-                      {errors.title.message}
-                    </span>
-                  )}
-                </div>
-
-                <div>
-                  <Label htmlFor="sku">SKU</Label>
-                  <Input
-                    id="sku"
-                    type="text"
-                    placeholder="Enter SKU"
-                    className="mt-1.5"
-                    {...register("sku")}
-                  />
-                  {errors.sku && (
-                    <span className="text-red-500 text-sm mt-1">
-                      {errors.sku.message}
-                    </span>
-                  )}
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="price">Price</Label>
-                    <Input
-                      id="price"
-                      type="number"
-                      step="0.01"
-                      placeholder="0.00"
-                      className="mt-1.5"
-                      {...register("price", { valueAsNumber: true })}
-                    />
-                    {errors.price && (
-                      <span className="text-red-500 text-sm mt-1">
-                        {errors.price.message}
-                      </span>
-                    )}
-                  </div>
-
-                  <div>
-                    <Label htmlFor="sale_price">Sale Price (Optional)</Label>
-                    <Input
-                      id="sale_price"
-                      type="number"
-                      step="0.01"
-                      placeholder="0.00"
-                      className="mt-1.5"
-                      {...register("sale_price", { valueAsNumber: true })}
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="description">Description</Label>
-                  <div className="w-full max-w-4xl space-y-4">
-                    <TextEditorBar editor={editor} />
-                    <EditorContent editor={editor} />
-                    {errors.description && (
-                      <span className="text-red-500 text-sm mt-1">
-                        {errors.description.message}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                <div>
-                  <Label>Cover Image</Label>
-                  <FileUpload
-                    onUpload={handleCoverUpload}
-                    maxFiles={1}
-                    maxSize={2 * 1024 * 1024}
-                    isCover={true}
-                    existingCover={watch("cover")}
-                    // onRemoveExisting={(url) => setValue("cover", "")}
-                    onRemoveExisting={() => setValue("cover", "")}
-                  />
-                </div>
-
-                <div>
-                  <Label>Product Images</Label>
-                  <FileUpload
-                    onUpload={handleProductImages}
-                    maxFiles={5}
-                    maxSize={2 * 1024 * 1024}
-                    existingFiles={watch("images")}
-                    onRemoveExisting={(url) => {
-                      const currentImages = watch("images");
-                      setValue(
-                        "images",
-                        currentImages?.filter((img) => img !== url)
-                      );
-                    }}
-                  />
-                </div>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Card className="rounded-xl border bg-card text-card-foreground shadow-lg">
+          <CardHeader className="p-6 border-b">
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-primary/10 rounded-lg">
+                <ShoppingCart className="w-5 h-5 text-primary" />
               </div>
+              <CardTitle className="text-primary">Update Product</CardTitle>
+            </div>
+          </CardHeader>
 
-              {/* Additional Information */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">
-                  Additional Information
-                </h3>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <CardContent className="p-6">
+              <div className="grid gap-8 md:grid-cols-2">
+                {/* Basic Information */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">Basic Information</h3>
 
-                <div className="grid grid-cols-2 items-center gap-4">
                   <div>
-                    <Label htmlFor="category">Category</Label>
-                    <Select
-                      disabled={isLoadingCategory}
-                      value={categoryOldValue || ""}
-                      onValueChange={(value) => {
-                        setCategory(value);
-                        setValue("category", value, { shouldValidate: true });
-                      }}
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue>
-                          {isLoadingCategory
-                            ? "Loading categories..."
-                            : categories?.find(
-                                (cat: any) =>
-                                  parseInt(cat.id) === parseInt(categoryValue)
-                              )?.name || "Select category"}
-                        </SelectValue>
-                      </SelectTrigger>
-                      <SelectContent>
-                        {isLoadingCategory ? (
-                          <div className="flex items-center justify-center p-4">
-                            <Loader2 className="h-5 w-5 animate-spin" />
-                          </div>
-                        ) : categories?.length > 0 ? (
-                          categories.map((cat: any) => (
-                            <SelectItem
-                              className="cursor-pointer"
-                              key={cat.id}
-                              value={cat.id.toString()}
-                            >
-                              {cat.name}
-                            </SelectItem>
-                          ))
-                        ) : (
-                          <div className="p-4 text-center text-gray-500">
-                            No categories available
-                          </div>
-                        )}
-                      </SelectContent>
-                    </Select>
-                    {errors.category && (
+                    <Label htmlFor="title">Title</Label>
+                    <Input
+                      id="title"
+                      type="text"
+                      placeholder="Enter product title"
+                      className="mt-1.5"
+                      {...register("title")}
+                    />
+                    {errors.title && (
                       <span className="text-red-500 text-sm mt-1">
-                        {errors.category.message}
+                        {errors.title.message}
                       </span>
                     )}
                   </div>
 
                   <div>
-                    <Label htmlFor="brand">Brand</Label>
+                    <Label htmlFor="sku">SKU</Label>
                     <Input
-                      id="brand"
+                      id="sku"
                       type="text"
-                      placeholder="Enter brand"
+                      placeholder="Enter SKU"
                       className="mt-1.5"
-                      {...register("brand")}
+                      {...register("sku")}
                     />
+                    {errors.sku && (
+                      <span className="text-red-500 text-sm mt-1">
+                        {errors.sku.message}
+                      </span>
+                    )}
                   </div>
-                </div>
 
-                <div>
-                  <Label htmlFor="stock_quantity">Stock Quantity</Label>
-                  <Input
-                    id="stock_quantity"
-                    type="number"
-                    placeholder="0"
-                    className="mt-1.5"
-                    {...register("stock_quantity", { valueAsNumber: true })}
-                  />
-                </div>
-
-                <div>
-                  <h4 className="font-medium mb-2">Dimensions & Weight</h4>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="weight">Weight (kg)</Label>
+                      <Label htmlFor="price">Price</Label>
                       <Input
-                        id="weight"
+                        id="price"
                         type="number"
                         step="0.01"
                         placeholder="0.00"
                         className="mt-1.5"
-                        {...register("weight", { valueAsNumber: true })}
+                        {...register("price", { valueAsNumber: true })}
                       />
+                      {errors.price && (
+                        <span className="text-red-500 text-sm mt-1">
+                          {errors.price.message}
+                        </span>
+                      )}
                     </div>
+
                     <div>
-                      <Label htmlFor="dimensions.length">Length (cm)</Label>
+                      <Label htmlFor="sale_price">Sale Price (Optional)</Label>
                       <Input
-                        id="dimensions.length"
+                        id="sale_price"
                         type="number"
-                        step="0.1"
-                        placeholder="0.0"
+                        step="0.01"
+                        placeholder="0.00"
                         className="mt-1.5"
-                        {...register("dimensions.length", {
-                          valueAsNumber: true,
-                        })}
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="dimensions.width">Width (cm)</Label>
-                      <Input
-                        id="dimensions.width"
-                        type="number"
-                        step="0.1"
-                        placeholder="0.0"
-                        className="mt-1.5"
-                        {...register("dimensions.width", {
-                          valueAsNumber: true,
-                        })}
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="dimensions.height">Height (cm)</Label>
-                      <Input
-                        id="dimensions.height"
-                        type="number"
-                        step="0.1"
-                        placeholder="0.0"
-                        className="mt-1.5"
-                        {...register("dimensions.height", {
-                          valueAsNumber: true,
-                        })}
+                        {...register("sale_price", { valueAsNumber: true })}
                       />
                     </div>
                   </div>
+
+                  <div>
+                    <Label htmlFor="description">Description</Label>
+                    <div className="w-full max-w-4xl space-y-4">
+                      <TextEditorBar editor={editor} />
+                      <EditorContent editor={editor} />
+                      {errors.description && (
+                        <span className="text-red-500 text-sm mt-1">
+                          {errors.description.message}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label>Cover Image</Label>
+                    <FileUpload
+                      onUpload={handleCoverUpload}
+                      maxFiles={1}
+                      maxSize={2 * 1024 * 1024}
+                      isCover={true}
+                      existingCover={watch("cover")}
+                      // onRemoveExisting={(url) => setValue("cover", "")}
+                      onRemoveExisting={() => setValue("cover", "")}
+                    />
+                  </div>
+
+                  <div>
+                    <Label>Product Images</Label>
+                    <FileUpload
+                      onUpload={handleProductImages}
+                      maxFiles={5}
+                      maxSize={2 * 1024 * 1024}
+                      existingFiles={watch("images")}
+                      onRemoveExisting={(url) => {
+                        const currentImages = watch("images");
+                        setValue(
+                          "images",
+                          currentImages?.filter((img) => img !== url)
+                        );
+                      }}
+                    />
+                  </div>
                 </div>
 
+                {/* Additional Information */}
                 <div className="space-y-4">
-                  <h4 className="font-medium">SEO Information</h4>
-                  <div>
-                    <Label htmlFor="meta_title">Meta Title</Label>
-                    <Input
-                      id="meta_title"
-                      type="text"
-                      placeholder="Enter meta title"
-                      className="mt-1.5"
-                      {...register("meta_title")}
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="meta_description">Meta Description</Label>
-                    <Textarea
-                      id="meta_description"
-                      placeholder="Enter meta description"
-                      className="mt-1.5"
-                      {...register("meta_description")}
-                    />
-                  </div>
-                </div>
+                  <h3 className="text-lg font-semibold">
+                    Additional Information
+                  </h3>
 
-                <div className="space-y-4 bg-secondary/20 p-4 rounded-lg">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="is_active">Status</Label>
-                    <div className="flex items-center gap-2">
+                  <div className="grid grid-cols-2 items-center gap-4">
+                    <div>
+                      <Label htmlFor="category">Category</Label>
+                      <Select
+                        disabled={isLoadingCategory}
+                        value={categoryOldValue || ""}
+                        onValueChange={(value) => {
+                          setCategory(value);
+                          setValue("category", value, { shouldValidate: true });
+                        }}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue>
+                            {isLoadingCategory
+                              ? "Loading categories..."
+                              : categories?.find(
+                                  (cat: any) =>
+                                    parseInt(cat.id) === parseInt(categoryValue)
+                                )?.name || "Select category"}
+                          </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent>
+                          {isLoadingCategory ? (
+                            <div className="flex items-center justify-center p-4">
+                              <Loader2 className="h-5 w-5 animate-spin" />
+                            </div>
+                          ) : categories?.length > 0 ? (
+                            categories.map((cat: any) => (
+                              <SelectItem
+                                className="cursor-pointer"
+                                key={cat.id}
+                                value={cat.id.toString()}
+                              >
+                                {cat.name}
+                              </SelectItem>
+                            ))
+                          ) : (
+                            <div className="p-4 text-center text-gray-500">
+                              No categories available
+                            </div>
+                          )}
+                        </SelectContent>
+                      </Select>
+                      {errors.category && (
+                        <span className="text-red-500 text-sm mt-1">
+                          {errors.category.message}
+                        </span>
+                      )}
+                    </div>
+
+                    <div>
+                      <Label htmlFor="brand">Brand</Label>
+                      <Input
+                        id="brand"
+                        type="text"
+                        placeholder="Enter brand"
+                        className="mt-1.5"
+                        {...register("brand")}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="stock_quantity">Stock Quantity</Label>
+                    <Input
+                      id="stock_quantity"
+                      type="number"
+                      placeholder="0"
+                      className="mt-1.5"
+                      {...register("stock_quantity", { valueAsNumber: true })}
+                    />
+                  </div>
+
+                  <div>
+                    <h4 className="font-medium mb-2">Dimensions & Weight</h4>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="weight">Weight (kg)</Label>
+                        <Input
+                          id="weight"
+                          type="number"
+                          step="0.01"
+                          placeholder="0.00"
+                          className="mt-1.5"
+                          {...register("weight", { valueAsNumber: true })}
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="dimensions.length">Length (cm)</Label>
+                        <Input
+                          id="dimensions.length"
+                          type="number"
+                          step="0.1"
+                          placeholder="0.0"
+                          className="mt-1.5"
+                          {...register("dimensions.length", {
+                            valueAsNumber: true,
+                          })}
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="dimensions.width">Width (cm)</Label>
+                        <Input
+                          id="dimensions.width"
+                          type="number"
+                          step="0.1"
+                          placeholder="0.0"
+                          className="mt-1.5"
+                          {...register("dimensions.width", {
+                            valueAsNumber: true,
+                          })}
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="dimensions.height">Height (cm)</Label>
+                        <Input
+                          id="dimensions.height"
+                          type="number"
+                          step="0.1"
+                          placeholder="0.0"
+                          className="mt-1.5"
+                          {...register("dimensions.height", {
+                            valueAsNumber: true,
+                          })}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h4 className="font-medium">SEO Information</h4>
+                    <div>
+                      <Label htmlFor="meta_title">Meta Title</Label>
+                      <Input
+                        id="meta_title"
+                        type="text"
+                        placeholder="Enter meta title"
+                        className="mt-1.5"
+                        {...register("meta_title")}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="meta_description">Meta Description</Label>
+                      <Textarea
+                        id="meta_description"
+                        placeholder="Enter meta description"
+                        className="mt-1.5"
+                        {...register("meta_description")}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-4 bg-secondary/20 p-4 rounded-lg">
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="is_active">Status</Label>
+                      <div className="flex items-center gap-2">
+                        <Switch
+                          id="is_active"
+                          checked={is_active}
+                          onCheckedChange={(checked) =>
+                            setValue("is_active", checked)
+                          }
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="is_promotion">Promotion Product</Label>
                       <Switch
-                        id="is_active"
-                        checked={is_active}
+                        id="is_promotion"
+                        checked={is_promotion}
                         onCheckedChange={(checked) =>
-                          setValue("is_active", checked)
+                          setValue("is_promotion", checked)
                         }
                       />
                     </div>
                   </div>
-
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="is_promotion">Promotion Product</Label>
-                    <Switch
-                      id="is_promotion"
-                      checked={is_promotion}
-                      onCheckedChange={(checked) =>
-                        setValue("is_promotion", checked)
-                      }
-                    />
-                  </div>
                 </div>
               </div>
-            </div>
-          </CardContent>
+            </CardContent>
 
-          <CardFooter className="p-6 border-t">
-            <div className="flex gap-3">
-              <Button type="submit" disabled={isLoading} className="px-8">
-                {isLoading ? (
-                  <>
-                    <Loader2 className="animate-spin mr-2" />
-                    {MESSAGES.OPERATION.UPDATE}
-                  </>
-                ) : (
-                  <>{MESSAGES.BUTTONS.UPDATE}</>
-                )}
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => router.push(routes.adminProducts)}
-              >
-                Cancel
-              </Button>
-            </div>
-          </CardFooter>
-        </form>
-      </Card>
+            <CardFooter className="p-6 border-t">
+              <div className="flex gap-3">
+                <Button type="submit" disabled={isLoading} className="px-8">
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="animate-spin mr-2" />
+                      {MESSAGES.OPERATION.UPDATE}
+                    </>
+                  ) : (
+                    <>{MESSAGES.BUTTONS.UPDATE}</>
+                  )}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => router.push(routes.adminProducts)}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </CardFooter>
+          </form>
+        </Card>
+      </Suspense>
     </div>
   );
 };

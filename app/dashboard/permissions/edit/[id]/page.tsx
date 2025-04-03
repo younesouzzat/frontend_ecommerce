@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { Suspense, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -87,96 +87,98 @@ const RolePermissionsPage = () => {
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 md:p-6 pt-0">
-      <Card className="rounded-xl border bg-card text-card-foreground shadow-lg">
-        <CardHeader className="p-6 border-b">
-          <div className="flex items-center space-x-3">
-            <div className="p-2 bg-primary/10 rounded-lg">
-              <Shield className="w-5 h-5 text-primary" />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Card className="rounded-xl border bg-card text-card-foreground shadow-lg">
+          <CardHeader className="p-6 border-b">
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-primary/10 rounded-lg">
+                <Shield className="w-5 h-5 text-primary" />
+              </div>
+              <CardTitle className="text-primary capitalize">
+                {permission?.res_data?.role?.name} Permissions
+              </CardTitle>
             </div>
-            <CardTitle className="text-primary capitalize">
-              {permission?.res_data?.role?.name} Permissions
-            </CardTitle>
-          </div>
-        </CardHeader>
+          </CardHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <CardContent className="p-6">
-            <div className="grid gap-8 md:grid-cols-2">
-              {isLoading ? (
-                <div className="flex items-center justify-center col-span-2">
-                  <Loader2 className="w-6 h-6 animate-spin" />
-                </div>
-              ) : (
-                permission?.res_data?.permissions?.map((group : any , index : any) => (
-                  <div key={index} className="space-y-4">
-                    <Label className="font-bold text-base">
-                      {group.parent}
-                    </Label>
-                    <ul className="flex flex-col items-start space-y-3">
-                      {group.permissions.map((perm: Permission) => (
-                        <li
-                          className="flex items-center space-x-2"
-                          key={perm.id}
-                        >
-                          <Controller
-                            name="permissions"
-                            control={control}
-                            render={({ field }: any) => (
-                              <Checkbox
-                                id={`permission_${perm.id}`}
-                                checked={field.value.includes(perm.id)}
-                                onCheckedChange={(checked) => {
-                                  const newValue = checked
-                                    ? [...field.value, perm.id]
-                                    : field.value.filter((p: any) => p !== perm.id);
-                                  field.onChange(newValue);
-                                }}
-                              />
-                            )}
-                          />
-                          <Label
-                            htmlFor={`permission_${perm.id}`}
-                            className="text-sm font-medium leading-none cursor-pointer"
-                          >
-                            {perm.name}
-                          </Label>
-                        </li>
-                      ))}
-                    </ul>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <CardContent className="p-6">
+              <div className="grid gap-8 md:grid-cols-2">
+                {isLoading ? (
+                  <div className="flex items-center justify-center col-span-2">
+                    <Loader2 className="w-6 h-6 animate-spin" />
                   </div>
-                ))
-              )}
-            </div>
-            {errors.permissions && (
-              <p className="text-red-500 text-sm mt-4">
-                {errors.permissions.message}
-              </p>
-            )}
-          </CardContent>
-
-          <CardFooter className="p-6 border-t">
-            <div className="flex gap-3">
-              <Button type="submit" disabled={isAssigning} className="px-8">
-                {isAssigning ? (
-                  <>
-                    <Loader2 className="animate-spin mr-2" />
-                    {MESSAGES.OPERATION.CREATE}
-                  </>
                 ) : (
-                  "Assign Permissions"
+                  permission?.res_data?.permissions?.map((group : any , index : any) => (
+                    <div key={index} className="space-y-4">
+                      <Label className="font-bold text-base">
+                        {group.parent}
+                      </Label>
+                      <ul className="flex flex-col items-start space-y-3">
+                        {group.permissions.map((perm: Permission) => (
+                          <li
+                            className="flex items-center space-x-2"
+                            key={perm.id}
+                          >
+                            <Controller
+                              name="permissions"
+                              control={control}
+                              render={({ field }: any) => (
+                                <Checkbox
+                                  id={`permission_${perm.id}`}
+                                  checked={field.value.includes(perm.id)}
+                                  onCheckedChange={(checked) => {
+                                    const newValue = checked
+                                      ? [...field.value, perm.id]
+                                      : field.value.filter((p: any) => p !== perm.id);
+                                    field.onChange(newValue);
+                                  }}
+                                />
+                              )}
+                            />
+                            <Label
+                              htmlFor={`permission_${perm.id}`}
+                              className="text-sm font-medium leading-none cursor-pointer"
+                            >
+                              {perm.name}
+                            </Label>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))
                 )}
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => router.push(routes.adminRoles)}
-              >
-                Cancel
-              </Button>
-            </div>
-          </CardFooter>
-        </form>
-      </Card>
+              </div>
+              {errors.permissions && (
+                <p className="text-red-500 text-sm mt-4">
+                  {errors.permissions.message}
+                </p>
+              )}
+            </CardContent>
+
+            <CardFooter className="p-6 border-t">
+              <div className="flex gap-3">
+                <Button type="submit" disabled={isAssigning} className="px-8">
+                  {isAssigning ? (
+                    <>
+                      <Loader2 className="animate-spin mr-2" />
+                      {MESSAGES.OPERATION.CREATE}
+                    </>
+                  ) : (
+                    "Assign Permissions"
+                  )}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => router.push(routes.adminRoles)}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </CardFooter>
+          </form>
+        </Card>
+      </Suspense>
     </div>
   );
 };

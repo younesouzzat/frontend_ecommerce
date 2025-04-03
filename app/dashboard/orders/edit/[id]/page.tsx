@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -179,155 +179,157 @@ const UpdateOrderPage = () => {
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 md:p-6 pt-0">
-      <Card className="rounded-xl border bg-card text-card-foreground shadow-lg">
-        <CardHeader className="p-6 border-b">
-          <div className="flex items-center space-x-3">
-            <div className="flex flex-row space-x-2 items-center">
-              <div className="p-2 bg-primary/10 rounded-lg">
-                <ShoppingCart className="w-5 h-5 text-primary" />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Card className="rounded-xl border bg-card text-card-foreground shadow-lg">
+          <CardHeader className="p-6 border-b">
+            <div className="flex items-center space-x-3">
+              <div className="flex flex-row space-x-2 items-center">
+                <div className="p-2 bg-primary/10 rounded-lg">
+                  <ShoppingCart className="w-5 h-5 text-primary" />
+                </div>
+                <CardTitle className="text-primary">Update Order</CardTitle>
               </div>
-              <CardTitle className="text-primary">Update Order</CardTitle>
+              <Button onClick={handleDownload} disabled={isLoadingInvoice}>
+                {isLoadingInvoice ? "Generating..." : "Download Invoice"}
+              </Button>
             </div>
-            <Button onClick={handleDownload} disabled={isLoadingInvoice}>
-              {isLoadingInvoice ? "Generating..." : "Download Invoice"}
-            </Button>
-          </div>
-        </CardHeader>
+          </CardHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <CardContent className="p-6">
-            <div className="grid gap-8 md:grid-cols-2">
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">
-                  Order Information : #{orderData?.order?.code}{" "}
-                </h3>
-                <div>
-                  <Label htmlFor="title">Date: {orderData?.order?.date}</Label>
-                </div>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <CardContent className="p-6">
+              <div className="grid gap-8 md:grid-cols-2">
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">
+                    Order Information : #{orderData?.order?.code}{" "}
+                  </h3>
+                  <div>
+                    <Label htmlFor="title">Date: {orderData?.order?.date}</Label>
+                  </div>
 
-                <div className="flex items-center gap-x-4">
-                  <Label htmlFor="status" className="whitespace-nowrap">
-                    Status
-                  </Label>
-                  <Select
-                    value={String(watch("status"))}
-                    onValueChange={(value) =>
-                      setValue("status", Number(value), {
-                        shouldValidate: false,
-                      })
-                    }
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="0">In Progress</SelectItem>
-                      <SelectItem value="1">Delivered</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                {errors?.status && (
-                  <span className="text-red-500 text-sm mt-1">
-                    {errors.status.message}
-                  </span>
-                )}
-              </div>
-
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Client Information</h3>
-                <div>
-                  <Label htmlFor="title">Name: {orderData?.bill?.name}</Label>
-                </div>
-                <div>
-                  <Label htmlFor="title">Phone: {orderData?.bill?.phone}</Label>
-                </div>
-                <div>
-                  <Label htmlFor="title">City: {orderData?.bill?.city}</Label>
-                </div>
-                <div>
-                  <Label htmlFor="title">
-                    Address: {orderData?.bill?.address}
-                  </Label>
-                </div>
-              </div>
-            </div>
-            <div className="grid gap-8 md:grid-cols-1 space-y-2 mt-4">
-              <h3 className="text-lg font-semibold">Ordered Items</h3>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Quantity</TableCell>
-                    <TableCell>Price</TableCell>
-                    <TableCell>Subtotal</TableCell>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {orderData?.order?.details?.length > 0 ? (
-                    orderData.order.details.map(renderOrderDetails)
-                  ) : (
-                    <TableRow>
-                      <TableCell colSpan={4}>No items available</TableCell>
-                    </TableRow>
+                  <div className="flex items-center gap-x-4">
+                    <Label htmlFor="status" className="whitespace-nowrap">
+                      Status
+                    </Label>
+                    <Select
+                      value={String(watch("status"))}
+                      onValueChange={(value) =>
+                        setValue("status", Number(value), {
+                          shouldValidate: false,
+                        })
+                      }
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="0">In Progress</SelectItem>
+                        <SelectItem value="1">Delivered</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  {errors?.status && (
+                    <span className="text-red-500 text-sm mt-1">
+                      {errors.status.message}
+                    </span>
                   )}
-                </TableBody>
-                <TableFooter>
-                  <TableRow>
-                    <TableCell colSpan={4} className="text-right">
-                      Subtotal: $
-                      {orderData?.order?.total
-                        ? orderData.order.total.toFixed(2)
-                        : "N/A"}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell colSpan={4} className="text-right">
-                      Delivery cost: $
-                      {orderData?.order?.delivery_mode
-                        ? orderData.order.delivery_mode.toFixed(2)
-                        : "N/A"}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell colSpan={4} className="text-right">
-                      Total: $
-                      {orderData?.order?.delivery_mode &&
-                      orderData?.order?.total
-                        ? (
-                            orderData.order.delivery_mode +
-                            orderData?.order?.total
-                          ).toFixed(2)
-                        : "N/A"}
-                    </TableCell>
-                  </TableRow>
-                </TableFooter>
-              </Table>
-            </div>
-          </CardContent>
+                </div>
 
-          <CardFooter className="p-6 border-t">
-            <div className="flex gap-3">
-              <Button type="submit" disabled={isLoading} className="px-8">
-                {isLoading ? (
-                  <>
-                    <Loader2 className="animate-spin mr-2" />
-                    {MESSAGES.OPERATION.UPDATE}
-                  </>
-                ) : (
-                  <>{MESSAGES.BUTTONS.UPDATE}</>
-                )}
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => router.push(routes.adminOrders)}
-              >
-                Cancel
-              </Button>
-            </div>
-          </CardFooter>
-        </form>
-      </Card>
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">Client Information</h3>
+                  <div>
+                    <Label htmlFor="title">Name: {orderData?.bill?.name}</Label>
+                  </div>
+                  <div>
+                    <Label htmlFor="title">Phone: {orderData?.bill?.phone}</Label>
+                  </div>
+                  <div>
+                    <Label htmlFor="title">City: {orderData?.bill?.city}</Label>
+                  </div>
+                  <div>
+                    <Label htmlFor="title">
+                      Address: {orderData?.bill?.address}
+                    </Label>
+                  </div>
+                </div>
+              </div>
+              <div className="grid gap-8 md:grid-cols-1 space-y-2 mt-4">
+                <h3 className="text-lg font-semibold">Ordered Items</h3>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableCell>Name</TableCell>
+                      <TableCell>Quantity</TableCell>
+                      <TableCell>Price</TableCell>
+                      <TableCell>Subtotal</TableCell>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {orderData?.order?.details?.length > 0 ? (
+                      orderData.order.details.map(renderOrderDetails)
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={4}>No items available</TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                  <TableFooter>
+                    <TableRow>
+                      <TableCell colSpan={4} className="text-right">
+                        Subtotal: $
+                        {orderData?.order?.total
+                          ? orderData.order.total.toFixed(2)
+                          : "N/A"}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell colSpan={4} className="text-right">
+                        Delivery cost: $
+                        {orderData?.order?.delivery_mode
+                          ? orderData.order.delivery_mode.toFixed(2)
+                          : "N/A"}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell colSpan={4} className="text-right">
+                        Total: $
+                        {orderData?.order?.delivery_mode &&
+                        orderData?.order?.total
+                          ? (
+                              orderData.order.delivery_mode +
+                              orderData?.order?.total
+                            ).toFixed(2)
+                          : "N/A"}
+                      </TableCell>
+                    </TableRow>
+                  </TableFooter>
+                </Table>
+              </div>
+            </CardContent>
+
+            <CardFooter className="p-6 border-t">
+              <div className="flex gap-3">
+                <Button type="submit" disabled={isLoading} className="px-8">
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="animate-spin mr-2" />
+                      {MESSAGES.OPERATION.UPDATE}
+                    </>
+                  ) : (
+                    <>{MESSAGES.BUTTONS.UPDATE}</>
+                  )}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => router.push(routes.adminOrders)}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </CardFooter>
+          </form>
+        </Card>
+      </Suspense>
     </div>
   );
 };

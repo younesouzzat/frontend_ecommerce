@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { Suspense } from "react";
 import {
   Card,
   CardContent,
@@ -31,7 +31,7 @@ const userSchema = z.object({
   is_active: z.boolean().default(true),
 });
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 const CreateCategoriePage = () => {
   const router = useRouter();
@@ -55,10 +55,9 @@ const CreateCategoriePage = () => {
   const onSubmit: SubmitHandler<FormData> = async (data: any) => {
     const loadingToast = toast.loading(MESSAGES.OPERATION.CREATE);
     try {
-
       const response = await createCategorie({
         name: data.name,
-        is_active: data.is_active
+        is_active: data.is_active,
       }).unwrap();
 
       toast.dismiss(loadingToast);
@@ -130,7 +129,9 @@ const CreateCategoriePage = () => {
                     <Switch
                       id="is_active"
                       checked={is_active}
-                      onCheckedChange={(checked) => setValue("is_active", checked)}
+                      onCheckedChange={(checked) =>
+                        setValue("is_active", checked)
+                      }
                     />
                     <span
                       className={`text-sm ${

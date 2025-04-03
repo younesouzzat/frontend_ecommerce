@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -148,170 +148,172 @@ const EditUserPage = () => {
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 md:p-6 pt-0">
-      <Card className="rounded-xl border bg-card text-card-foreground shadow-lg">
-        <CardHeader className="p-6 border-b">
-          <div className="flex items-center space-x-3">
-            <div className="p-2 bg-primary/10 rounded-lg">
-              <Users className="w-5 h-5 text-primary" />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Card className="rounded-xl border bg-card text-card-foreground shadow-lg">
+          <CardHeader className="p-6 border-b">
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-primary/10 rounded-lg">
+                <Users className="w-5 h-5 text-primary" />
+              </div>
+              <CardTitle className="text-primary">Update User</CardTitle>
             </div>
-            <CardTitle className="text-primary">Update User</CardTitle>
-          </div>
-        </CardHeader>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <CardContent className="p-6">
-            <div className="grid gap-8 md:grid-cols-2">
-              {isLoadingUser ? (
-                <div className="flex items-center justify-center col-span-2">
-                  <Loader2 className="w-6 h-6 animate-spin" />
-                </div>
-              ) : (
-                <>
-                  <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="name">Full Name</Label>
-                      <Input
-                        id="name"
-                        type="text"
-                        placeholder="Enter user's full name"
-                        {...register("name")}
-                      />
-                      {errors.name && (
-                        <span className="text-red-500 text-sm mt-1">
-                          {errors.name.message}
-                        </span>
-                      )}
-                    </div>
-
-                    <div>
-                      <Label htmlFor="email">Email Address</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        placeholder="user@example.com"
-                        {...register("email")}
-                      />
-                      {errors.email && (
-                        <span className="text-red-500 text-sm mt-1">
-                          {errors.email.message}
-                        </span>
-                      )}
-                    </div>
-
-                    <div>
-                      <Label htmlFor="roles">Roles</Label>
-                      <MultiSelect
-                        options={availableRoles}
-                        defaultValue={roleNames}
-                        placeholder="Select roles"
-                        maxCount={3}
-                        onValueChange={(selected) => {
-                          setValue("roles", selected, { shouldValidate: true });
-                          setRoleNames(selected);
-                        }}
-                      />
-
-                      {errors.roles && (
-                        <span className="text-red-500 text-sm mt-1">
-                          {errors.roles.message}
-                        </span>
-                      )}
-                    </div>
+          </CardHeader>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <CardContent className="p-6">
+              <div className="grid gap-8 md:grid-cols-2">
+                {isLoadingUser ? (
+                  <div className="flex items-center justify-center col-span-2">
+                    <Loader2 className="w-6 h-6 animate-spin" />
                   </div>
+                ) : (
+                  <>
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="name">Full Name</Label>
+                        <Input
+                          id="name"
+                          type="text"
+                          placeholder="Enter user's full name"
+                          {...register("name")}
+                        />
+                        {errors.name && (
+                          <span className="text-red-500 text-sm mt-1">
+                            {errors.name.message}
+                          </span>
+                        )}
+                      </div>
 
-                  {/* Password */}
-                  <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="password">Password</Label>
-                      <div className="mt-2 space-y-3">
-                        <div className="flex space-x-2">
-                          <Input
-                            type="text"
-                            value={password}
-                            placeholder="Generated password"
-                            {...register("password")}
-                          />
+                      <div>
+                        <Label htmlFor="email">Email Address</Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          placeholder="user@example.com"
+                          {...register("email")}
+                        />
+                        {errors.email && (
+                          <span className="text-red-500 text-sm mt-1">
+                            {errors.email.message}
+                          </span>
+                        )}
+                      </div>
+
+                      <div>
+                        <Label htmlFor="roles">Roles</Label>
+                        <MultiSelect
+                          options={availableRoles}
+                          defaultValue={roleNames}
+                          placeholder="Select roles"
+                          maxCount={3}
+                          onValueChange={(selected) => {
+                            setValue("roles", selected, { shouldValidate: true });
+                            setRoleNames(selected);
+                          }}
+                        />
+
+                        {errors.roles && (
+                          <span className="text-red-500 text-sm mt-1">
+                            {errors.roles.message}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Password */}
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="password">Password</Label>
+                        <div className="mt-2 space-y-3">
+                          <div className="flex space-x-2">
+                            <Input
+                              type="text"
+                              value={password}
+                              placeholder="Generated password"
+                              {...register("password")}
+                            />
+                            <Button
+                              size="icon"
+                              variant="outline"
+                              type="button"
+                              onClick={copyToClipboard}
+                              className="shrink-0"
+                            >
+                              <Copy className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              size="icon"
+                              variant="outline"
+                              type="button"
+                              onClick={clearGeneratePassword}
+                              className="shrink-0"
+                            >
+                              <Eraser className="h-4 w-4" />
+                            </Button>
+                          </div>
                           <Button
-                            size="icon"
-                            variant="outline"
                             type="button"
-                            onClick={copyToClipboard}
-                            className="shrink-0"
+                            onClick={generatePassword}
+                            variant="secondary"
+                            className="w-full"
                           >
-                            <Copy className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            size="icon"
-                            variant="outline"
-                            type="button"
-                            onClick={clearGeneratePassword}
-                            className="shrink-0"
-                          >
-                            <Eraser className="h-4 w-4" />
+                            <KeyRound className="w-4 h-4 mr-2" />
+                            Generate Secure Password
                           </Button>
                         </div>
-                        <Button
-                          type="button"
-                          onClick={generatePassword}
-                          variant="secondary"
-                          className="w-full"
-                        >
-                          <KeyRound className="w-4 h-4 mr-2" />
-                          Generate Secure Password
-                        </Button>
+                        {errors.password && (
+                          <span className="text-red-500 text-sm mt-1">
+                            {errors.password.message}
+                          </span>
+                        )}
                       </div>
-                      {errors.password && (
-                        <span className="text-red-500 text-sm mt-1">
-                          {errors.password.message}
-                        </span>
-                      )}
-                    </div>
 
-                    {/* Status */}
-                    <div className="flex items-center justify-between p-4 bg-secondary/20 rounded-lg">
-                      <Label htmlFor="status">Account Status</Label>
-                      <div className="flex items-center gap-2">
-                        <span className={!status ? "text-primary" : ""}>
-                          Inactive
-                        </span>
-                        <Switch
-                          id="status"
-                          checked={status}
-                          onCheckedChange={(checked) =>
-                            setValue("status", checked, {
-                              shouldValidate: true,
-                            })
-                          }
-                        />
-                        <span className={status ? "text-primary" : ""}>
-                          Active
-                        </span>
+                      {/* Status */}
+                      <div className="flex items-center justify-between p-4 bg-secondary/20 rounded-lg">
+                        <Label htmlFor="status">Account Status</Label>
+                        <div className="flex items-center gap-2">
+                          <span className={!status ? "text-primary" : ""}>
+                            Inactive
+                          </span>
+                          <Switch
+                            id="status"
+                            checked={status}
+                            onCheckedChange={(checked) =>
+                              setValue("status", checked, {
+                                shouldValidate: true,
+                              })
+                            }
+                          />
+                          <span className={status ? "text-primary" : ""}>
+                            Active
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </>
-              )}
-            </div>
-          </CardContent>
+                  </>
+                )}
+              </div>
+            </CardContent>
 
-          {/* Actions */}
-          <CardFooter className="p-6 border-t">
-            <div className="flex gap-3">
-              <Button type="submit" disabled={isLoading} className="px-8">
-                {isLoading
-                  ? MESSAGES.OPERATION.UPDATE
-                  : MESSAGES.BUTTONS.UPDATE}
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => router.push(routes.adminUsers)}
-              >
-                {MESSAGES.BUTTONS.CANCEL}
-              </Button>
-            </div>
-          </CardFooter>
-        </form>
-      </Card>
+            {/* Actions */}
+            <CardFooter className="p-6 border-t">
+              <div className="flex gap-3">
+                <Button type="submit" disabled={isLoading} className="px-8">
+                  {isLoading
+                    ? MESSAGES.OPERATION.UPDATE
+                    : MESSAGES.BUTTONS.UPDATE}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => router.push(routes.adminUsers)}
+                >
+                  {MESSAGES.BUTTONS.CANCEL}
+                </Button>
+              </div>
+            </CardFooter>
+          </form>
+        </Card>
+      </Suspense>
     </div>
   );
 };

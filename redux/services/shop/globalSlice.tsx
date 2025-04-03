@@ -9,6 +9,9 @@ interface GlobalState {
 }
 
 const loadFromLocalStorage = (key: string, defaultValue: any) => {
+  if (typeof window === "undefined") {
+    return defaultValue;
+  }
   const storedValue = localStorage.getItem(key);
   return storedValue ? JSON.parse(storedValue) : defaultValue;
 };
