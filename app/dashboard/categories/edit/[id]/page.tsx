@@ -34,6 +34,8 @@ const categorieSchema = z.object({
   is_active: z.boolean().default(true),
 });
 
+export const dynamic = 'force-dynamic';
+
 const EditCategoriePage = () => {
   const router = useRouter();
   const { id } = useParams();

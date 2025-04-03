@@ -1,8 +1,8 @@
 export const routes = {
   home: "/",
   shop: "/shop",
-  account: "/account/orders",
-  agentOrder: (id: string | number) => `/account/orders/${id}`,
+  account: "/account",
+  agentOrder: (id: string | number) => `/my-orders/${id}`,
   wishlist: "/wishlist",
   checkout: "/checkout",
   orderComplete: "/order-complete",

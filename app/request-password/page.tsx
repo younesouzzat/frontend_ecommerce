@@ -1,6 +1,8 @@
 import { Link } from "lucide-react"
 import { RequestPWDForm } from "@/components/req-password-form"
 
+export const dynamic = 'force-dynamic';
+
 export default function RequestPasswordPage() {
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">

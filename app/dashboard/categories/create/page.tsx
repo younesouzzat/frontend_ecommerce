@@ -31,6 +31,8 @@ const userSchema = z.object({
   is_active: z.boolean().default(true),
 });
 
+export const dynamic = 'force-dynamic';
+
 const CreateCategoriePage = () => {
   const router = useRouter();
   const [createCategorie, { isLoading }] = useCreateCategorieMutation();

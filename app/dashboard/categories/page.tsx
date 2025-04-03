@@ -12,6 +12,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { MESSAGES } from "@/constants/messages";
 
+export const dynamic = 'force-dynamic';
+
 export default function CategoriesPage() {
   const [page, setPage] = useState(1);
   const perPage = 5;
