@@ -59,6 +59,25 @@ export interface Review {
   date: string;
 }
 
+export interface ProductFormData {
+  title: string;
+  description: string;
+  sku: string;
+  price: number;
+  sale_price: number | null;
+  stock_quantity: number;
+  weight: number;
+  dimensions: Dimensions;
+  category: string;
+  brand: string;
+  meta_title: string;
+  meta_description: string;
+  is_active: boolean;
+  is_promotion: boolean;
+  cover?: File | null;
+  images?: File[];
+}
+
 export interface Product {
   id: number;
   image: string;

@@ -23,10 +23,7 @@ import { MESSAGES } from "@/constants/messages";
 
 type FormData = {
   name: string;
-  email: string;
   is_active: boolean;
-  password: string;
-  roles: string[];
 };
 
 const userSchema = z.object({

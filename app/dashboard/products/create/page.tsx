@@ -13,7 +13,7 @@ import { Loader2, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-hot-toast";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { z } from "zod";
+import { string, z } from "zod";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
@@ -33,29 +33,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FileUpload from "@/components/FileUpload";
 import { useGetAllCategoriesQuery } from "@/redux/services/admin/categories";
-
-type FormData = {
-  title: string;
-  description: string;
-  sku: string;
-  price: number;
-  sale_price: number | null;
-  stock_quantity: number;
-  weight: number;
-  dimensions: {
-    length: number;
-    width: number;
-    height: number;
-  };
-  category: string;
-  brand: string;
-  meta_title: string;
-  meta_description: string;
-  cover: string;
-  images: string[];
-  is_active: boolean;
-  is_promotion: boolean;
-};
+import { ProductFormData } from "@/types";
 
 const userSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -103,7 +81,7 @@ const CreateProductPage = () => {
     setValue,
     watch,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<ProductFormData>({
     resolver: zodResolver(userSchema),
     defaultValues: {
       is_active: true,
@@ -135,7 +113,7 @@ const CreateProductPage = () => {
   const is_active = watch("is_active");
   const is_promotion = watch("is_promotion");
 
-  const onSubmit: SubmitHandler<FormData> = async (data: any) => {
+  const onSubmit: SubmitHandler<ProductFormData> = async (data: any) => {
     const loadingToast = toast.loading(MESSAGES.OPERATION.CREATE);
     try {
       const formData = new FormData();
