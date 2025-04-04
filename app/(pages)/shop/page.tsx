@@ -111,6 +111,15 @@ const ShopPage = () => {
           const qParam = searchParams.get("q") || "";
           const categoryParam = searchParams.get("category") || "all";
 
+          // useEffect(() => {
+          //   if (!isLoadingCat && categories) {
+          //     const match = categories.find((c) =>
+          //       c.name.toLowerCase() === categoryParam.toLowerCase()
+          //     );
+          //     setCategoryID(match ? match.id : categoryParam);
+          //   }
+          // }, [categoryParam, categories, isLoadingCat]);
+
           useEffect(() => {
             if (!isLoadingCat && categories) {
               const match = categories.find((c) =>
@@ -118,7 +127,7 @@ const ShopPage = () => {
               );
               setCategoryID(match ? match.id : categoryParam);
             }
-          }, [categoryParam, categories, isLoadingCat]);
+          }, [categoryParam]);
 
           useEffect(() => {
             setFormState((prev) => ({

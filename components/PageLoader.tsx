@@ -31,7 +31,7 @@ const PageLoader = () => {
           return () => {
             setLoading(false);
           };
-        }, [pathname, searchParams]);
+        }, [searchParams]);
 
         if (!loading) return null;
 
