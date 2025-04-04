@@ -1,5 +1,4 @@
 "use client";
-import { SessionProvider } from 'next-auth/react';
 import { ThemeProvider } from "@/components/theme-provider";
 import { StoreProvider } from "@/redux/stores/StoreProvider";
 import { AuthProvider } from "@/redux/stores/AuthProvider";
@@ -36,7 +35,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         className={`font-sans antialiased leading-relaxed ${geist.variable} ${geistMono.variable} ${rubik.variable} dark:bg-slate-950 dark:text-white bg-gray-50 text-gray-900`}
         style={{ fontFamily: "'Rubik', var(--font-rubik), sans-serif" }}
       >
-        <SessionProvider>
           <NuqsAdapter>
             <StoreProvider>
               <AuthProvider>
@@ -55,7 +53,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </AuthProvider>
             </StoreProvider>
           </NuqsAdapter>
-        </SessionProvider>
       </body>
     </html>
   );
