@@ -16,12 +16,17 @@ const nextConfig: NextConfig = {
     return config;
   },
   images: {
-    domains: ["127.0.0.1"],
+    domains: [
+      "bigstore.byethost14.com",
+      "utfs.io",
+      "lh3.googleusercontent.com",
+      "platform-lookaside.fbsbx.com",
+    ],
     remotePatterns: [
       {
         protocol: "http",
-        hostname: "127.0.0.1",
-        port: "8000",
+        hostname: "bigstore.byethost14.com",
+        port: "",
         pathname: "/storage/**",
       },
       { protocol: "https", hostname: "utfs.io", port: "" },
