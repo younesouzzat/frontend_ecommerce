@@ -6,10 +6,8 @@ import { routes } from "@/utils/routes";
 import DropdownMenuDemo from "./SearchParts/DropdownMenuDemo";
 import { useRouter } from "next/navigation";
 import { useGetCategoriesQuery } from "@/redux/services/client/categories";
-import { CategoryProps } from "@/types";
 
 const SearchArea = () => {
-  // const { categories, isLoading } = useGetCategoriesQuery<CategoryProps>(undefined);
   const { data: categories, isLoading } = useGetCategoriesQuery(undefined);
 
   const router = useRouter();

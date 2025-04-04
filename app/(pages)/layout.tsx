@@ -4,6 +4,7 @@ import Topbar from "./partials/Topbar";
 import CompareList from "../components/client/shop/CompareList";
 import QuickView from "../components/client/shop/QuickView";
 import SearchArea from "./partials/SearchArea";
+import BottomNavMenu from "./partials/BottomNavMenu";
 
 type IconName = "Facebook" | "Twitter" | "Instagram" | "Youtube";
 
@@ -34,6 +35,7 @@ export default function RootLayout({
       <QuickView />
       <CompareList />
       <Footer socialItems={socialItems} />
+      <BottomNavMenu />
     </>
   );
 }

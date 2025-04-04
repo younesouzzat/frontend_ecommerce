@@ -103,7 +103,7 @@ const ShopPage = () => {
   const totalPages = data?.last_page || 1;
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto md:px-0 px-4 py-8">
       <h1 className="text-3xl font-medium mb-8">Shop Our Products</h1>
 
       <SearchParamsWrapper>

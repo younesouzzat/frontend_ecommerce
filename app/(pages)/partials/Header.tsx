@@ -1,20 +1,14 @@
+"use client";
 import { logo } from "@/utils/assets";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import HeartIconWithBadge from "./smallIcons/HeartIconWithBadge"; 
+import HeartIconWithBadge from "./smallIcons/HeartIconWithBadge";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
 import ShopCartSheet from "@/app/components/client/shop/ShopCartSheet";
 import { routes } from "@/utils/routes";
+import MobileMenu from "./MobileMenu";
+import { useGetCategoriesQuery } from "@/redux/services/client/categories";
 
 interface NavItems {
   title: string;
@@ -22,30 +16,20 @@ interface NavItems {
 }
 
 const items: NavItems[] = [
-  { title: "Home", href: "/" },
+  { title: "Home", href: routes.home },
   { title: "Shop", href: routes.shop },
-  { title: "About", href: "/about-us" },
-  { title: "Contact", href: "/contact-us" },
+  { title: "About", href: routes.about },
+  { title: "Contact", href: routes.contact },
 ];
 
 export default function Header() {
+
+  const { data: categories, isLoading } = useGetCategoriesQuery(undefined);
+
   return (
     <div className="container py-4 px-2 md:px-0 flex flex-row items-center justify-between">
       <div className="flex md:hidden w-1/3 md:w-1/4">
-        <Sheet>
-          <SheetTrigger>
-            <Menu />
-          </SheetTrigger>
-          <SheetContent side={"left"}>
-            <SheetHeader>
-              <SheetTitle>Are you absolutely sure?</SheetTitle>
-              <SheetDescription>
-                This action cannot be undone. This will permanently delete your
-                account and remove your data from our servers.
-              </SheetDescription>
-            </SheetHeader>
-          </SheetContent>
-        </Sheet>
+        <MobileMenu items={items} categories={categories as any} isLoading={isLoading} />
       </div>
 
       <div className="w-1/3 flex justify-center md:justify-start md:w-1/4">
