@@ -153,6 +153,7 @@ const UpdateProductPage = () => {
       }
 
       const categoryID = (product.category_id ?? "").toString();
+      console.log(product);
       setCategory(categoryID);
 
       reset({
@@ -161,8 +162,8 @@ const UpdateProductPage = () => {
         sku: product.ref || "",
         price: product.price || 0,
         sale_price: product.price_special || null,
-        stock_quantity: product.gestion_stock || 0,
-        weight: product.size || 0,
+        stock_quantity: parseFloat(product.gestion_stock) || 0,
+        weight: parseFloat(product.size) || 0,
         dimensions: {
           length: dimensions.length || 0,
           width: dimensions.width || 0,
@@ -174,7 +175,7 @@ const UpdateProductPage = () => {
         meta_description: product.meta_description || "",
         is_active: product.statut ?? true,
         is_promotion: product.is_promotion ?? false,
-        cover: product.couverture || "",
+        cover: product.cover || "",
         images: parsedImages || [],
       });
 
@@ -240,6 +241,8 @@ const UpdateProductPage = () => {
       }
     }
   };
+
+  console.log(errors);
 
   if (isLoadingProduct) {
     return (
