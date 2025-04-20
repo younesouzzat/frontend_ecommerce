@@ -152,15 +152,15 @@ const UpdateProductPage = () => {
         }
       }
 
-      const categoryID = (product.category ?? "").toString();
+      const categoryID = (product.category_id ?? "").toString();
       setCategory(categoryID);
 
       reset({
-        title: product.titre || "",
+        title: product.title || "",
         description: product.description || "",
         sku: product.ref || "",
-        price: product.prix || 0,
-        sale_price: product.prix_special || null,
+        price: product.price || 0,
+        sale_price: product.price_special || null,
         stock_quantity: product.gestion_stock || 0,
         weight: product.size || 0,
         dimensions: {
@@ -169,7 +169,7 @@ const UpdateProductPage = () => {
           height: dimensions.height || 0,
         },
         category: categoryID,
-        brand: product.marque || "",
+        brand: product.brand || "",
         meta_title: product.meta_titre || "",
         meta_description: product.meta_description || "",
         is_active: product.statut ?? true,

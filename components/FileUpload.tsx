@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect, useRef } from "react";
 import { useDropzone } from "react-dropzone";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -38,35 +38,48 @@ const FileUpload: React.FC<FileUploadProps> = ({
   imagesToKeep
 }) => {
   const [files, setFiles] = useState<FileWithPreview[]>([]);
+  const isInitialMount = useRef(true);
+  const existingFilesRef = useRef<string[]>([]);
+  const existingCoverRef = useRef<string | undefined>(undefined);
 
+  // Initialize existing files only once or when they actually change
   useEffect(() => {
-    const existingImages =
-      isCover && existingCover ? [existingCover] : existingFiles;
-
-    const newFiles = existingImages.map((url) => ({
-      id: Math.random().toString(36).substring(7),
-      preview: url,
-      progress: 100,
-      status: "completed" as const,
-      isExisting: true,
-      file: new File([], "existing-file"),
-    }));
-
-    setFiles(newFiles);
+    // Check if this is the initial mount or if the existing files/cover actually changed
+    if (isInitialMount.current || 
+        JSON.stringify(existingFilesRef.current) !== JSON.stringify(existingFiles) ||
+        existingCoverRef.current !== existingCover) {
+      
+      const existingImages = isCover && existingCover ? [existingCover] : existingFiles;
+      
+      const newFiles = existingImages.map((url) => ({
+        id: Math.random().toString(36).substring(7),
+        preview: url,
+        progress: 100,
+        status: "completed" as const,
+        isExisting: true,
+        file: new File([], "existing-file"),
+      }));
+      
+      setFiles(newFiles);
+      
+      // Update refs to track current values
+      existingFilesRef.current = [...existingFiles];
+      existingCoverRef.current = existingCover;
+      isInitialMount.current = false;
+    }
   }, [existingFiles, existingCover, isCover]);
-  // }, [existingFiles.join(","), existingCover, isCover]);
 
-  // const validateFile = (file: File) => {
-  //   if (!file.type.startsWith("image/")) {
-  //     throw new Error(`${file.name} is not an image file`);
-  //   }
+  const validateFile = (file: File) => {
+    if (!file.type.startsWith("image/")) {
+      throw new Error(`${file.name} is not an image file`);
+    }
 
-  //   if (file.size > maxSize) {
-  //     throw new Error(`${file.name} is larger than ${maxSize / 1024 / 1024}MB`);
-  //   }
+    if (file.size > maxSize) {
+      throw new Error(`${file.name} is larger than ${maxSize / 1024 / 1024}MB`);
+    }
 
-  //   return true;
-  // };
+    return true;
+  };
 
   const onDrop = useCallback(
     (acceptedFiles: File[], rejectedFiles: any[]) => {
@@ -92,18 +105,6 @@ const FileUpload: React.FC<FileUploadProps> = ({
       const newFilesCount = acceptedFiles.length;
       const existingFilesCount = files.filter((f) => f.isExisting).length;
       const currentNewFilesCount = files.filter((f) => !f.isExisting).length;
-
-      const validateFile = (file: File) => {
-        if (!file.type.startsWith("image/")) {
-          throw new Error(`${file.name} is not an image file`);
-        }
-    
-        if (file.size > maxSize) {
-          throw new Error(`${file.name} is larger than ${maxSize / 1024 / 1024}MB`);
-        }
-    
-        return true;
-      };
 
       // For cover image, only allow one file
       if (isCover && newFilesCount > 0) {
